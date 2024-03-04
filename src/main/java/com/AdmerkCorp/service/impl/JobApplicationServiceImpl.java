@@ -1,6 +1,6 @@
 package com.AdmerkCorp.service.impl;
 
-import com.AdmerkCorp.model.User;
+import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.model.job.CoverLetter;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;

@@ -1,6 +1,6 @@
 package com.AdmerkCorp.repository;
 
-import com.AdmerkCorp.model.User;
+import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;
 import org.springframework.data.jpa.repository.JpaRepository;

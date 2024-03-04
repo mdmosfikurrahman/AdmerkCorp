@@ -1,35 +1,36 @@
-package com.AdmerkCorp.model;
+package com.AdmerkCorp.model.user;
 
-import com.AdmerkCorp.model.user.Role;
+import com.AdmerkCorp.model.Location;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Data
-@Builder
 @Entity
-@RequiredArgsConstructor
-public class Company implements UserDetails {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String companyName;
-    private String companyMail;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthDate;
+    private String email;
+    private String username;
     private String password;
-    private String website;
+    private boolean isRefugee;
     private Role role;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "social_id")
-    private Social social;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
@@ -42,7 +43,7 @@ public class Company implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return username;
     }
 
     @Override
@@ -69,4 +70,5 @@ public class Company implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

@@ -1,31 +1,52 @@
 package com.AdmerkCorp.controller;
 
+import com.AdmerkCorp.dto.AuthenticationRequest;
+import com.AdmerkCorp.dto.AuthenticationResponse;
+import com.AdmerkCorp.dto.CompanyRegisterRequest;
+import com.AdmerkCorp.dto.UserRegisterRequest;
+import com.AdmerkCorp.exception.AccessForbiddenException;
+import com.AdmerkCorp.exception.ErrorResponse;
+import com.AdmerkCorp.exception.ResourceNotFoundException;
 import com.AdmerkCorp.exception.ValidationException;
-import com.AdmerkCorp.model.Company;
-import com.AdmerkCorp.model.User;
-import com.AdmerkCorp.service.CompanyService;
+import com.AdmerkCorp.service.AuthenticationService;
 import com.AdmerkCorp.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final UserService userService;
-    private final CompanyService companyService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/user/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User registeredUser = userService.registerUser(user);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest request) {
+        try {
+            AuthenticationResponse response = authenticationService.registerUser(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return handleException(CONFLICT, e);
+        }
     }
 
     @PostMapping("/company/register")
-    public ResponseEntity<Company> registerCompany(@RequestBody Company company) {
-        Company registeredCompany = companyService.registerCompany(company);
-        return ResponseEntity.ok(registeredCompany);
+    public ResponseEntity<?> registerCompany(@RequestBody CompanyRegisterRequest request) {
+        try {
+            AuthenticationResponse response = authenticationService.registerCompany(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return handleException(CONFLICT, e);
+        }
     }
 
     @GetMapping("/validate")
@@ -39,23 +60,36 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestParam(name = "username") String username,
-                                       @RequestParam(name = "password") String password) {
+    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
         try {
-            User user = userService.authenticateUser(username, password);
-            if (user != null) {
-                return ResponseEntity.ok("User login successful");
-            }
-
-            Company company = companyService.authenticateCompany(username, password);
-            if (company != null) {
-                return ResponseEntity.ok("Company login successful");
-            }
-
-            throw new ValidationException("Invalid username or password");
-        } catch (ValidationException ex) {
-            return ResponseEntity.badRequest().body(ex.getErrors());
+            AuthenticationResponse response = authenticationService.authenticate(request);
+            return ResponseEntity.ok(response);
+        } catch (ResourceNotFoundException e) {
+            return handleException(NOT_FOUND, e);
+        } catch (AccessForbiddenException e) {
+            return handleException(FORBIDDEN, e);
+        } catch (Exception e) {
+            return handleException(UNAUTHORIZED, e);
         }
+    }
+
+    @PostMapping("/refresh-token")
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        authenticationService.refreshToken(request, response);
+    }
+
+    private ResponseEntity<ErrorResponse> handleException(HttpStatus status, Exception e) {
+        return ResponseEntity.status(status)
+                .body(
+                        new ErrorResponse(
+                                status.value(),
+                                status.getReasonPhrase(),
+                                e.getMessage()
+                        )
+                );
     }
 
 

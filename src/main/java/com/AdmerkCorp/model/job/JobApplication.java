@@ -1,6 +1,6 @@
 package com.AdmerkCorp.model.job;
 
-import com.AdmerkCorp.model.User;
+import com.AdmerkCorp.model.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 

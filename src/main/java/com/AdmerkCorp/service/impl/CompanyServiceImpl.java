@@ -1,7 +1,7 @@
 package com.AdmerkCorp.service.impl;
 
 import com.AdmerkCorp.model.Company;
-import com.AdmerkCorp.model.Role;
+import com.AdmerkCorp.model.user.Role;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;
 import com.AdmerkCorp.repository.CompanyRepository;

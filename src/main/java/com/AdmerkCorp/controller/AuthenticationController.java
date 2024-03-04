@@ -42,8 +42,17 @@ public class AuthenticationController {
     public ResponseEntity<?> loginUser(@RequestParam(name = "username") String username,
                                        @RequestParam(name = "password") String password) {
         try {
-            userService.authenticateUser(username, password);
-            return ResponseEntity.ok("Login successful");
+            User user = userService.authenticateUser(username, password);
+            if (user != null) {
+                return ResponseEntity.ok("User login successful");
+            }
+
+            Company company = companyService.authenticateCompany(username, password);
+            if (company != null) {
+                return ResponseEntity.ok("Company login successful");
+            }
+
+            throw new ValidationException("Invalid username or password");
         } catch (ValidationException ex) {
             return ResponseEntity.badRequest().body(ex.getErrors());
         }

@@ -20,7 +20,7 @@ public class User {
     private String username;
     private String password;
     private boolean isRefugee;
-    private String role;
+    private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")

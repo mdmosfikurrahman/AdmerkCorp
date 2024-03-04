@@ -16,6 +16,7 @@ public class Company {
     private String companyMail;
     private String password;
     private String website;
+    private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "social_id")

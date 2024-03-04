@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -16,9 +17,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+//                                .requestMatchers("/company/**").hasRole("COMPANY")
+//                                .requestMatchers("/user/**").hasRole("USER")
+//                                .requestMatchers("/auth/**").permitAll()
                         .anyRequest().permitAll()
-//                        .anyRequest().authenticated()
-                );
+//                                .anyRequest().authenticated()
+                        )
+                .logout(LogoutConfigurer::permitAll)
+        ;
 
         return http.build();
     }

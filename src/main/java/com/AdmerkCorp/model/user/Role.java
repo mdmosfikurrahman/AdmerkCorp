@@ -16,6 +16,7 @@ public enum Role {
 
     USER(
             Set.of(
+                    USER_READ,
                     USER_READ_JOBS,
                     USER_JOB_APPLY,
                     USER_PASSWORD_CHANGE

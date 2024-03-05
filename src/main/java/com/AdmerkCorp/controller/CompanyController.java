@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/company")
-@PreAuthorize("hasAnyRole('ADMIN', 'COMPANY')")
+@PreAuthorize("hasRole(COMPANY')")
 @RequiredArgsConstructor
 public class CompanyController {
 
@@ -30,7 +30,7 @@ public class CompanyController {
     private final JobApplicationService jobApplicationService;
 
     @GetMapping("/account")
-    @PreAuthorize("hasAnyAuthority('admin:read', 'company:read')")
+    @PreAuthorize("hasAuthority('company:read')")
     public ResponseEntity<CompanyResponse> getAccountInfo(Principal principal) {
         Company company = companyService.getCompanyByUsername(principal.getName());
         CompanyResponse responseDTO = new CompanyResponse(company);
@@ -39,7 +39,7 @@ public class CompanyController {
 
 
     @PutMapping("/password")
-    @PreAuthorize("hasAnyAuthority('admin:update', 'company:password_change')")
+    @PreAuthorize("hasAuthority('company:password_change')")
     public ResponseEntity<String> companyPasswordChange(@RequestBody ChangePasswordRequest request, Principal principal) {
         try {
             String result = companyService.changePassword(request, principal);
@@ -50,7 +50,7 @@ public class CompanyController {
     }
 
     @GetMapping("/application")
-    @PreAuthorize("hasAnyAuthority('admin:read', 'company:read')")
+    @PreAuthorize("hasAuthority('company:read')")
     public List<JobApplicationResponse> getAllApplications() {
         List<JobApplication> jobApplications = jobApplicationService.getAllApplications();
         return jobApplications.stream()
@@ -60,7 +60,7 @@ public class CompanyController {
 
 
     @PostMapping("/job")
-    @PreAuthorize("hasAnyAuthority('admin:create', 'company:create')")
+    @PreAuthorize("hasAuthority('company:create')")
     public ResponseEntity<String> createJob(@RequestBody Job job, Principal principal) {
         Company company = companyService.getCompanyByUsername(principal.getName());
         Job createdJob = companyService.createJob(job, company);
@@ -68,7 +68,7 @@ public class CompanyController {
     }
 
     @GetMapping("/job")
-    @PreAuthorize("hasAnyAuthority('admin:read', 'company:read')")
+    @PreAuthorize("hasAuthority('company:read')")
     public ResponseEntity<List<JobResponse>> getAllJobsByCompany(Principal principal) {
         Company company = companyService.getCompanyByUsername(principal.getName());
         List<Job> jobs = companyService.getAllJobsByCompany(company);

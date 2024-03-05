@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
-@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -31,7 +31,7 @@ public class UserController {
     private final JobApplicationService jobApplicationService;
 
     @GetMapping("/account")
-    @PreAuthorize("hasAnyAuthority('admin:read', 'user:read')")
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<UserResponse> getAccountInfo(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         UserResponse responseDTO = new UserResponse(user);
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    @PreAuthorize("hasAnyAuthority('admin:update', 'user:password_change')")
+    @PreAuthorize("hasAuthority('user:password_change')")
     public ResponseEntity<String> companyPasswordChange(@RequestBody ChangePasswordRequest request, Principal principal) {
         try {
             String result = userService.changePassword(request, principal);
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/job")
-    @PreAuthorize("hasAnyAuthority('admin:read', 'user:read_jobs')")
+    @PreAuthorize("hasAuthority('user:read_jobs')")
     public ResponseEntity<List<JobResponse>> getAllJobs() {
         List<Job> allJobs = userService.getAllJobs();
         List<JobResponse> jobResponseDTOs = allJobs.stream()
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/application")
-    @PreAuthorize("hasAnyAuthority('admin:read', 'user:read')")
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<List<JobApplicationResponse>> getAllAppliedJobs(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         List<JobApplication> appliedJobs = jobApplicationService.getApplicationsByUser(user);
@@ -72,7 +72,7 @@ public class UserController {
 
 
     @PostMapping("/application/{jobId}")
-    @PreAuthorize("hasAnyAuthority('admin:create', 'user:job_apply')")
+    @PreAuthorize("hasAuthority('user:job_apply')")
     public ResponseEntity<String> applyJob(@PathVariable Long jobId, @RequestBody CoverLetter coverLetter, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         try {

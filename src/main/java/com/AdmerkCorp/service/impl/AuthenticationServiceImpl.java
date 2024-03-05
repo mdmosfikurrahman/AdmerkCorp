@@ -74,6 +74,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public AuthenticationResponse registerAdmin(UserRegisterRequest request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new ResourceAlreadyExistsException("User with this username already exists");
+        }
+
+        var user = User.builder()
+                .email(request.getEmail())
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ADMIN)
+                .build();
+
+        var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
+
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Override
     public AuthenticationResponse registerCompany(CompanyRegisterRequest request) {
         if (companyRepository.findByName(request.getName()).isPresent()) {
             throw new ResourceAlreadyExistsException("Company with this name already exists");

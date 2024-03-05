@@ -23,7 +23,8 @@ public class SecurityConfiguration {
     public static final String[] whiteListedRoutes = new String[]{
             "/",
             "/auth/**",
-            "/job/**"
+            "/job/**",
+            "/admin"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

@@ -15,4 +15,5 @@ public class AdmerkCorpController {
     public String getTermsAndConditions() {
         return "terms";
     }
+
 }

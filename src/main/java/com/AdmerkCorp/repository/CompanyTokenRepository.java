@@ -1,14 +1,14 @@
 package com.AdmerkCorp.repository;
 
-import com.AdmerkCorp.model.Company;
 import com.AdmerkCorp.model.token.CompanyToken;
-import com.AdmerkCorp.model.token.UserToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface CompanyTokenRepository extends JpaRepository<CompanyToken, Long> {
 
     @Query(value = """
@@ -19,4 +19,5 @@ public interface CompanyTokenRepository extends JpaRepository<CompanyToken, Long
     List<CompanyToken> findAllValidTokenByCompany(Long id);
 
     Optional<CompanyToken> findByToken(String userToken);
+
 }

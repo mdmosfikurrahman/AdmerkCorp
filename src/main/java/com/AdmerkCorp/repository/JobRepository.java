@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
+
     List<Job> findByCompany(Company company);
 
     @Query("SELECT j FROM Job j WHERE (:companyName IS NULL OR j.company.name = :companyName) " +
@@ -24,4 +25,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             @Param("salaryDuration") SalaryDuration salaryDuration,
             @Param("category") Category category,
             @Param("experience") Experience experience);
+
 }

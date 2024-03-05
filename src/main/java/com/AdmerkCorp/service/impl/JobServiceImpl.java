@@ -46,4 +46,5 @@ public class JobServiceImpl implements JobService {
     public void deleteJobById(Long jobId) {
         jobRepository.deleteById(jobId);
     }
+
 }

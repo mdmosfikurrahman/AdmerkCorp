@@ -8,10 +8,12 @@ import java.security.Principal;
 import java.util.List;
 
 public interface CompanyService {
+
     Job createJob(Job job, Company company);
     List<Job> getAllJobsByCompany(Company company);
     Company getCompanyByUsername(String username);
     String changePassword(ChangePasswordRequest request, Principal connectedUser);
     List<Company> getAllCompanies();
     void deleteCompanyById(Long companyId);
+
 }

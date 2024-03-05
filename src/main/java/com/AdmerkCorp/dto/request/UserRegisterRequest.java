@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegisterRequest {
+
     private String firstName;
     private String lastName;
     private String birthDate;
@@ -19,4 +20,5 @@ public class UserRegisterRequest {
     private String password;
     private boolean isRefugee;
     private Location location;
+
 }

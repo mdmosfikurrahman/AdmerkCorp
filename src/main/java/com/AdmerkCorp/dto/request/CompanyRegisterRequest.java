@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompanyRegisterRequest {
+
     private String name;
     private String companyName;
     private String companyMail;
@@ -21,4 +22,5 @@ public class CompanyRegisterRequest {
     private Social social;
     private Location location;
     private Role role;
+
 }

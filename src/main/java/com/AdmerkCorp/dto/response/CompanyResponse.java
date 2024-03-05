@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class CompanyResponse {
+
     private String name;
     private String companyName;
     private String companyMail;
@@ -20,4 +21,5 @@ public class CompanyResponse {
         this.social = new SocialResponse(company.getSocial());
         this.location = new LocationResponse(company.getLocation());
     }
+
 }

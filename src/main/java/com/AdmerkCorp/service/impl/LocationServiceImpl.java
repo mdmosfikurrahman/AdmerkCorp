@@ -3,20 +3,16 @@ package com.AdmerkCorp.service.impl;
 import com.AdmerkCorp.model.Location;
 import com.AdmerkCorp.repository.LocationRepository;
 import com.AdmerkCorp.service.LocationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
-
-    @Autowired
-    public LocationServiceImpl(LocationRepository locationRepository) {
-        this.locationRepository = locationRepository;
-    }
 
     @Override
     public List<Location> getAllLocations() {
@@ -27,4 +23,5 @@ public class LocationServiceImpl implements LocationService {
     public void deleteLocationById(Long locationId) {
         locationRepository.deleteById(locationId);
     }
+
 }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/company")
-@PreAuthorize("hasRole(COMPANY')")
+@PreAuthorize("hasRole('COMPANY')")
 @RequiredArgsConstructor
 public class CompanyController {
 
@@ -51,9 +51,12 @@ public class CompanyController {
 
     @GetMapping("/application")
     @PreAuthorize("hasAuthority('company:read')")
-    public List<JobApplicationResponse> getAllApplications() {
-        List<JobApplication> jobApplications = jobApplicationService.getAllApplications();
-        return jobApplications.stream()
+    public List<JobApplicationResponse> getAllApplications(Principal principal) {
+        Company company = companyService.getCompanyByUsername(principal.getName());
+
+        List<JobApplication> companyApplications = jobApplicationService.getApplicationsByCompany(company);
+
+        return companyApplications.stream()
                 .map(JobApplicationResponse::new)
                 .collect(Collectors.toList());
     }
@@ -79,6 +82,5 @@ public class CompanyController {
 
         return ResponseEntity.ok(jobResponseList);
     }
-
 
 }

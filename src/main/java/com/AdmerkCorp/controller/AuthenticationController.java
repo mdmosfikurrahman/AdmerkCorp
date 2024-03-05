@@ -7,7 +7,6 @@ import com.AdmerkCorp.dto.request.UserRegisterRequest;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.exception.ErrorResponse;
 import com.AdmerkCorp.exception.ResourceNotFoundException;
-import com.AdmerkCorp.exception.ValidationException;
 import com.AdmerkCorp.service.AuthenticationService;
 import com.AdmerkCorp.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +25,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
+
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
@@ -51,12 +51,8 @@ public class AuthenticationController {
 
     @GetMapping("/validate")
     public ResponseEntity<?> validateUser(@RequestParam(name = "usernameOrEmail") String usernameOrEmail) {
-        try {
-            userService.validateUser(usernameOrEmail);
-            return ResponseEntity.ok("Validated");
-        } catch (ValidationException ex) {
-            return ResponseEntity.badRequest().body(ex.getErrors());
-        }
+        userService.validateUser(usernameOrEmail);
+        return ResponseEntity.ok("Validated");
     }
 
     @PostMapping("/login")
@@ -91,6 +87,5 @@ public class AuthenticationController {
                         )
                 );
     }
-
 
 }

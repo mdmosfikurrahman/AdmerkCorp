@@ -37,6 +37,7 @@ import static com.AdmerkCorp.model.token.TokenType.BEARER;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
+
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
@@ -284,6 +285,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         }
     }
-
 
 }

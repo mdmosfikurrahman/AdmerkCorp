@@ -22,5 +22,5 @@ public class JobApplication {
 
     @Embedded
     private CoverLetter coverLetter;
-}
 
+}

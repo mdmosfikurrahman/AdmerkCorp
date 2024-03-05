@@ -1,7 +1,6 @@
 package com.AdmerkCorp.model.token;
 
 import com.AdmerkCorp.model.Company;
-import com.AdmerkCorp.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,4 +33,5 @@ public class CompanyToken {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     public Company company;
+
 }

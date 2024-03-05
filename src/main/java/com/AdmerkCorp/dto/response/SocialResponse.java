@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class SocialResponse {
+
     private String facebook;
     private String linkedIn;
     private String twitter;
@@ -18,4 +19,5 @@ public class SocialResponse {
         this.instagram = social.getInstagram();
         this.whatsApp = social.getWhatsApp();
     }
+
 }

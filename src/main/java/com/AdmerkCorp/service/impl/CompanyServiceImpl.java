@@ -70,4 +70,5 @@ public class CompanyServiceImpl implements CompanyService {
     public void deleteCompanyById(Long companyId) {
         companyRepository.deleteById(companyId);
     }
+
 }

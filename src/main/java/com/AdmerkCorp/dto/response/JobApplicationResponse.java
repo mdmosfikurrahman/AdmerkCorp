@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class JobApplicationResponse {
+
     private UserResponse user;
     private JobResponse job;
     private CoverLetter coverLetter;
@@ -15,4 +16,5 @@ public class JobApplicationResponse {
         this.job = new JobResponse(jobApplication.getJob());
         this.coverLetter = jobApplication.getCoverLetter();
     }
+
 }

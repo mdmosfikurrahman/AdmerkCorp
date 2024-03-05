@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class LocationResponse {
+
     private String country;
     private String state;
     private String division;
@@ -20,4 +21,5 @@ public class LocationResponse {
         this.address = location.getAddress();
         this.zipCode = location.getZipCode();
     }
+
 }

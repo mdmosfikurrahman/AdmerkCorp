@@ -1,4 +1,4 @@
-package com.AdmerkCorp.config;
+package com.AdmerkCorp.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,6 +1,6 @@
 package com.AdmerkCorp.service.impl;
 
-import com.AdmerkCorp.config.JwtService;
+import com.AdmerkCorp.config.security.JwtService;
 import com.AdmerkCorp.dto.AuthenticationRequest;
 import com.AdmerkCorp.dto.AuthenticationResponse;
 import com.AdmerkCorp.dto.CompanyRegisterRequest;

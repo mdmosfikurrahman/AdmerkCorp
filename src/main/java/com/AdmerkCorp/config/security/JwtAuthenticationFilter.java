@@ -1,4 +1,4 @@
-package com.AdmerkCorp.config;
+package com.AdmerkCorp.config.security;
 
 import com.AdmerkCorp.repository.CompanyTokenRepository;
 import com.AdmerkCorp.repository.UserTokenRepository;

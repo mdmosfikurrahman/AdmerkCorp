@@ -1,5 +1,6 @@
 package com.AdmerkCorp.service;
 
+import com.AdmerkCorp.model.Company;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;
 
@@ -14,5 +15,6 @@ public interface JobService {
     Job getJobById(Long jobId);
 
     List<JobApplication> getJobApplicants(Long jobId);
+    List<Job> getAllJobsByCompany(Company company);
 }
 

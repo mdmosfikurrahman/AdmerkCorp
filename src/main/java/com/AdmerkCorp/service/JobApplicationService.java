@@ -11,5 +11,6 @@ public interface JobApplicationService {
     JobApplication applyToJob(User user, Long jobId, CoverLetter coverLetter);
 
     List<JobApplication> getApplicationsByUser(User user);
+    List<JobApplication> getAllApplications();
 }
 

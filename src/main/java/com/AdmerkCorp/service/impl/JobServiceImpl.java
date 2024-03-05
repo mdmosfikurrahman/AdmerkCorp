@@ -1,5 +1,6 @@
 package com.AdmerkCorp.service.impl;
 
+import com.AdmerkCorp.model.Company;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;
 import com.AdmerkCorp.repository.JobApplicationRepository;
@@ -34,5 +35,10 @@ public class JobServiceImpl implements JobService {
     public List<JobApplication> getJobApplicants(Long jobId) {
         Job job = getJobById(jobId);
         return jobApplicationRepository.findByJob(job);
+    }
+
+    @Override
+    public List<Job> getAllJobsByCompany(Company company) {
+        return jobRepository.findByCompany(company);
     }
 }

@@ -31,5 +31,10 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     public List<JobApplication> getApplicationsByUser(User user) {
         return jobApplicationRepository.findByUser(user);
     }
+
+    @Override
+    public List<JobApplication> getAllApplications() {
+        return jobApplicationRepository.findAll();
+    }
 }
 

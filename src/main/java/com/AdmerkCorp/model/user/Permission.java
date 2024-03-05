@@ -18,7 +18,7 @@ public enum Permission {
     COMPANY_JOB_CREATE("company:create"),
     COMPANY_PASSWORD_CHANGE("company:password_change"),
     COMPANY_DELETE("company:delete"),
-    COMPANY_JOB_DELETE("company:delete"),
+    COMPANY_JOB_DELETE("company:job_delete"),
 
     // User Permission Authority
     USER_READ_JOBS("user:read_jobs"),

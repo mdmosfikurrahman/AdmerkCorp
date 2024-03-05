@@ -1,16 +1,23 @@
 package com.AdmerkCorp.service.impl;
 
+import com.AdmerkCorp.dto.ChangePasswordRequest;
+import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.Company;
 import com.AdmerkCorp.model.user.Role;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;
+import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.repository.CompanyRepository;
 import com.AdmerkCorp.service.CompanyService;
 import com.AdmerkCorp.service.JobService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,26 +25,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
 
-    private final CompanyRepository companyRepository;
     private final JobService jobService;
-    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    @Override
-    public Company registerCompany(Company company) {
-        String encryptedPassword = passwordEncoder.encode(company.getPassword());
-        company.setPassword(encryptedPassword);
-        company.setRole(Role.COMPANY);
-        return companyRepository.save(company);
-    }
-
-    @Override
-    public Optional<Company> authenticateCompany(String companyName, String password) {
-        Optional<Company> company = companyRepository.findByName(companyName);
-        if (company.isPresent() && passwordEncoder.matches(password, company.get().getPassword())) {
-            return company;
-        }
-        return Optional.empty();
-    }
+    private final CompanyRepository companyRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Job createJob(Job job, Company company) {
@@ -46,7 +36,33 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<JobApplication> getJobApplicants(Long jobId) {
-        return jobService.getJobApplicants(jobId);
+    public List<Job> getAllJobsByCompany(Company company) {
+        return jobService.getAllJobsByCompany(company);
+    }
+
+    @Override
+    public Company getCompanyByUsername(String username) {
+        return companyRepository.findByName(username)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found with username: " + username));
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequest request, Principal connectedUser) {
+
+        var company = (Company) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), company.getPassword())) {
+            throw new AccessForbiddenException("Wrong password");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+            throw new AccessForbiddenException("Password doesn't match");
+        }
+
+        company.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        companyRepository.save(company);
+
+        return "Password changed Successfully!";
     }
 }

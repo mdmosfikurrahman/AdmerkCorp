@@ -12,5 +12,7 @@ public interface JobApplicationService {
 
     List<JobApplication> getApplicationsByUser(User user);
     List<JobApplication> getAllApplications();
+
+    void deleteApplicationById(Long applicationId);
 }
 

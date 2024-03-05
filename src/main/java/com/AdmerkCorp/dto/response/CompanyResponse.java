@@ -9,7 +9,6 @@ public class CompanyResponse {
     private String companyName;
     private String companyMail;
     private String website;
-    private String role;
     private SocialResponse social;
     private LocationResponse location;
 
@@ -18,7 +17,6 @@ public class CompanyResponse {
         this.companyName = company.getCompanyName();
         this.companyMail = company.getCompanyMail();
         this.website = company.getWebsite();
-        this.role = company.getRole().name();
         this.social = new SocialResponse(company.getSocial());
         this.location = new LocationResponse(company.getLocation());
     }

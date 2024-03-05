@@ -60,4 +60,14 @@ public class CompanyServiceImpl implements CompanyService {
 
         return "Password changed Successfully!";
     }
+
+    @Override
+    public List<Company> getAllCompanies() {
+        return companyRepository.findAll();
+    }
+
+    @Override
+    public void deleteCompanyById(Long companyId) {
+        companyRepository.deleteById(companyId);
+    }
 }

@@ -16,5 +16,7 @@ public interface JobService {
     List<Job> getAllJobsByCompany(Company company);
 
     List<Job> getFilteredJobs(String companyName, JobType jobType, SalaryDuration salaryDuration, Category category, Experience experience);
+
+    void deleteJobById(Long jobId);
 }
 

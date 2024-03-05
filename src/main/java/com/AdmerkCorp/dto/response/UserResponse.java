@@ -9,7 +9,6 @@ public class UserResponse {
     private String lastName;
     private String email;
     private String username;
-    private String role;
     private LocationResponse location;
 
     public UserResponse(User user) {
@@ -17,7 +16,6 @@ public class UserResponse {
         this.lastName = user.getLastName();
         this.email = user.getEmail();
         this.username = user.getUsername();
-        this.role = user.getRole().name();
         this.location = new LocationResponse(user.getLocation());
     }
 }

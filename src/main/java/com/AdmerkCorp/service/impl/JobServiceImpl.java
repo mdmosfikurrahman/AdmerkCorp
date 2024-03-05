@@ -41,4 +41,9 @@ public class JobServiceImpl implements JobService {
     public List<Job> getFilteredJobs(String companyName, JobType jobType, SalaryDuration salaryDuration, Category category, Experience experience) {
         return jobRepository.getFilteredJobs(companyName, jobType, salaryDuration, category, experience);
     }
+
+    @Override
+    public void deleteJobById(Long jobId) {
+        jobRepository.deleteById(jobId);
+    }
 }

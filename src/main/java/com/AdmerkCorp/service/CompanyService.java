@@ -12,4 +12,6 @@ public interface CompanyService {
     List<Job> getAllJobsByCompany(Company company);
     Company getCompanyByUsername(String username);
     String changePassword(ChangePasswordRequest request, Principal connectedUser);
+    List<Company> getAllCompanies();
+    void deleteCompanyById(Long companyId);
 }

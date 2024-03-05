@@ -11,12 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User registerUser(User user);
     boolean validateUser(String usernameOrEmail);
-    Optional<User> authenticateUser(String username, String password);
     List<Job> getAllJobs();
-    JobApplication applyToJob(User user, Long jobId, CoverLetter coverLetter);
-    List<JobApplication> getApplicationsByUser(User user);
     String changePassword(ChangePasswordRequest request, Principal connectedUser);
     User getUserById(Long id);
     List<User> getAllUsers();

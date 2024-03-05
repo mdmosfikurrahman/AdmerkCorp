@@ -32,14 +32,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User registerUser(User user) {
-        String encryptedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encryptedPassword);
-        user.setRole(Role.USER);
-        return userRepository.save(user);
-    }
-
-    @Override
     public boolean validateUser(String usernameOrEmail) {
         User existingUser = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
 
@@ -51,27 +43,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> authenticateUser(String username, String password) {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
-            return user;
-        }
-        return Optional.empty();
-    }
-
-    @Override
     public List<Job> getAllJobs() {
         return jobService.getAllJobs();
-    }
-
-    @Override
-    public JobApplication applyToJob(User user, Long jobId, CoverLetter coverLetter) {
-        return jobApplicationService.applyToJob(user, jobId, coverLetter);
-    }
-
-    @Override
-    public List<JobApplication> getApplicationsByUser(User user) {
-        return jobApplicationService.getApplicationsByUser(user);
     }
 
     @Override

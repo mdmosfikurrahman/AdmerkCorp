@@ -34,8 +34,8 @@ public class UserController {
     @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<UserResponse> getAccountInfo(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        UserResponse responseDTO = new UserResponse(user);
-        return ResponseEntity.ok(responseDTO);
+        UserResponse userResponse = new UserResponse(user);
+        return ResponseEntity.ok(userResponse);
     }
 
     @PutMapping("/password")

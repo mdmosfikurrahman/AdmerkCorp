@@ -21,8 +21,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     public static final String[] whiteListedRoutes = new String[]{
+            "/",
             "/auth/**",
-            "/"
+            "/job/**"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

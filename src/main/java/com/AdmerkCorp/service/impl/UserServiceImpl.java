@@ -1,6 +1,6 @@
 package com.AdmerkCorp.service.impl;
 
-import com.AdmerkCorp.dto.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.ChangePasswordRequest;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.exception.ResourceNotFoundException;
 import com.AdmerkCorp.exception.ValidationException;

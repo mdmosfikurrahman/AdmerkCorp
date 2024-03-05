@@ -1,6 +1,6 @@
 package com.AdmerkCorp.service;
 
-import com.AdmerkCorp.dto.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.ChangePasswordRequest;
 import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.model.job.CoverLetter;
 import com.AdmerkCorp.model.job.Job;

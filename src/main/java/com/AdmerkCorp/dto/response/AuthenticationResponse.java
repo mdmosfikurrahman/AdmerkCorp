@@ -1,4 +1,4 @@
-package com.AdmerkCorp.dto;
+package com.AdmerkCorp.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

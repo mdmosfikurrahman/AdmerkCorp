@@ -1,9 +1,9 @@
 package com.AdmerkCorp.service;
 
-import com.AdmerkCorp.dto.AuthenticationRequest;
-import com.AdmerkCorp.dto.AuthenticationResponse;
-import com.AdmerkCorp.dto.CompanyRegisterRequest;
-import com.AdmerkCorp.dto.UserRegisterRequest;
+import com.AdmerkCorp.dto.request.AuthenticationRequest;
+import com.AdmerkCorp.dto.response.AuthenticationResponse;
+import com.AdmerkCorp.dto.request.CompanyRegisterRequest;
+import com.AdmerkCorp.dto.request.UserRegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

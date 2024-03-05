@@ -1,6 +1,9 @@
 package com.AdmerkCorp.controller;
 
-import com.AdmerkCorp.dto.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.response.JobApplicationResponse;
+import com.AdmerkCorp.dto.response.JobResponse;
+import com.AdmerkCorp.dto.response.UserResponse;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.job.CoverLetter;
 import com.AdmerkCorp.model.job.Job;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -28,9 +32,10 @@ public class UserController {
 
     @GetMapping("/account")
     @PreAuthorize("hasAnyAuthority('admin:read', 'user:read')")
-    public ResponseEntity<User> getAccountInfo(Principal principal) {
+    public ResponseEntity<UserResponse> getAccountInfo(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        return ResponseEntity.ok(user);
+        UserResponse responseDTO = new UserResponse(user);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PutMapping("/password")
@@ -46,18 +51,25 @@ public class UserController {
 
     @GetMapping("/job")
     @PreAuthorize("hasAnyAuthority('admin:read', 'user:read_jobs')")
-    public ResponseEntity<List<Job>> getAllJobs() {
+    public ResponseEntity<List<JobResponse>> getAllJobs() {
         List<Job> allJobs = userService.getAllJobs();
-        return ResponseEntity.ok(allJobs);
+        List<JobResponse> jobResponseDTOs = allJobs.stream()
+                .map(JobResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(jobResponseDTOs);
     }
 
     @GetMapping("/application")
     @PreAuthorize("hasAnyAuthority('admin:read', 'user:read')")
-    public ResponseEntity<List<JobApplication>> getAllAppliedJobs(Principal principal) {
+    public ResponseEntity<List<JobApplicationResponse>> getAllAppliedJobs(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         List<JobApplication> appliedJobs = jobApplicationService.getApplicationsByUser(user);
-        return ResponseEntity.ok(appliedJobs);
+        List<JobApplicationResponse> applicationResponseDTOs = appliedJobs.stream()
+                .map(JobApplicationResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(applicationResponseDTOs);
     }
+
 
     @PostMapping("/application/{jobId}")
     @PreAuthorize("hasAnyAuthority('admin:create', 'user:job_apply')")

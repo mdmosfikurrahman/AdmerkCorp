@@ -1,4 +1,4 @@
-package com.AdmerkCorp.dto;
+package com.AdmerkCorp.dto.request;
 
 import com.AdmerkCorp.model.Location;
 import lombok.AllArgsConstructor;

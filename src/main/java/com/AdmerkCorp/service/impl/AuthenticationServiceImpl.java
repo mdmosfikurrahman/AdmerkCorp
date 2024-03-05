@@ -1,10 +1,10 @@
 package com.AdmerkCorp.service.impl;
 
 import com.AdmerkCorp.config.security.JwtService;
-import com.AdmerkCorp.dto.AuthenticationRequest;
-import com.AdmerkCorp.dto.AuthenticationResponse;
-import com.AdmerkCorp.dto.CompanyRegisterRequest;
-import com.AdmerkCorp.dto.UserRegisterRequest;
+import com.AdmerkCorp.dto.request.AuthenticationRequest;
+import com.AdmerkCorp.dto.response.AuthenticationResponse;
+import com.AdmerkCorp.dto.request.CompanyRegisterRequest;
+import com.AdmerkCorp.dto.request.UserRegisterRequest;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.exception.ResourceAlreadyExistsException;
 import com.AdmerkCorp.exception.ResourceNotFoundException;

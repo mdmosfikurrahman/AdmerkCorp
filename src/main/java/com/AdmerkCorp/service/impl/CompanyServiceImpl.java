@@ -1,25 +1,20 @@
 package com.AdmerkCorp.service.impl;
 
-import com.AdmerkCorp.dto.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.ChangePasswordRequest;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.Company;
-import com.AdmerkCorp.model.user.Role;
 import com.AdmerkCorp.model.job.Job;
-import com.AdmerkCorp.model.job.JobApplication;
-import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.repository.CompanyRepository;
 import com.AdmerkCorp.service.CompanyService;
 import com.AdmerkCorp.service.JobService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

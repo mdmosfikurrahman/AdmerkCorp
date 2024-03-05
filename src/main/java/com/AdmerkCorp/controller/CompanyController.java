@@ -1,6 +1,9 @@
 package com.AdmerkCorp.controller;
 
-import com.AdmerkCorp.dto.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.response.CompanyResponse;
+import com.AdmerkCorp.dto.response.JobApplicationResponse;
+import com.AdmerkCorp.dto.response.JobResponse;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.Company;
 import com.AdmerkCorp.model.job.Job;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/company")
@@ -27,10 +31,12 @@ public class CompanyController {
 
     @GetMapping("/account")
     @PreAuthorize("hasAnyAuthority('admin:read', 'company:read')")
-    public ResponseEntity<Company> getAccountInfo(Principal principal) {
+    public ResponseEntity<CompanyResponse> getAccountInfo(Principal principal) {
         Company company = companyService.getCompanyByUsername(principal.getName());
-        return ResponseEntity.ok(company);
+        CompanyResponse responseDTO = new CompanyResponse(company);
+        return ResponseEntity.ok(responseDTO);
     }
+
 
     @PutMapping("/password")
     @PreAuthorize("hasAnyAuthority('admin:update', 'company:password_change')")
@@ -45,9 +51,13 @@ public class CompanyController {
 
     @GetMapping("/application")
     @PreAuthorize("hasAnyAuthority('admin:read', 'company:read')")
-    public List<JobApplication> getAllApplications() {
-        return jobApplicationService.getAllApplications();
+    public List<JobApplicationResponse> getAllApplications() {
+        List<JobApplication> jobApplications = jobApplicationService.getAllApplications();
+        return jobApplications.stream()
+                .map(JobApplicationResponse::new)
+                .collect(Collectors.toList());
     }
+
 
     @PostMapping("/job")
     @PreAuthorize("hasAnyAuthority('admin:create', 'company:create')")
@@ -59,10 +69,16 @@ public class CompanyController {
 
     @GetMapping("/job")
     @PreAuthorize("hasAnyAuthority('admin:read', 'company:read')")
-    public ResponseEntity<List<Job>> getAllJobsByCompany(Principal principal) {
+    public ResponseEntity<List<JobResponse>> getAllJobsByCompany(Principal principal) {
         Company company = companyService.getCompanyByUsername(principal.getName());
         List<Job> jobs = companyService.getAllJobsByCompany(company);
-        return ResponseEntity.ok(jobs);
+
+        List<JobResponse> jobResponseList = jobs.stream()
+                .map(JobResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(jobResponseList);
     }
+
 
 }

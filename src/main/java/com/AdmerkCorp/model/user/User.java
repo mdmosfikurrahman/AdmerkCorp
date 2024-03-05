@@ -2,10 +2,7 @@ package com.AdmerkCorp.model.user;
 
 import com.AdmerkCorp.model.Location;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,8 +10,8 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 @Data
-@Entity
 @Builder
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {

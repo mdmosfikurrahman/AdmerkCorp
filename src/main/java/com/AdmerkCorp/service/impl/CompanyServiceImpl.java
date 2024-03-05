@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,17 +26,17 @@ public class CompanyServiceImpl implements CompanyService {
     public Company registerCompany(Company company) {
         String encryptedPassword = passwordEncoder.encode(company.getPassword());
         company.setPassword(encryptedPassword);
-        company.setRole(Role.ROLE_COMPANY);
+        company.setRole(Role.COMPANY);
         return companyRepository.save(company);
     }
 
     @Override
-    public Company authenticateCompany(String companyName, String password) {
-        Company company = companyRepository.findByName(companyName);
-        if (company != null && passwordEncoder.matches(password, company.getPassword())) {
+    public Optional<Company> authenticateCompany(String companyName, String password) {
+        Optional<Company> company = companyRepository.findByName(companyName);
+        if (company.isPresent() && passwordEncoder.matches(password, company.get().getPassword())) {
             return company;
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

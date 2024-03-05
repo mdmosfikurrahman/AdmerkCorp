@@ -2,9 +2,7 @@ package com.AdmerkCorp.model;
 
 import com.AdmerkCorp.model.user.Role;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,7 +11,8 @@ import java.util.Collection;
 @Data
 @Builder
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Company implements UserDetails {
 
     @Id

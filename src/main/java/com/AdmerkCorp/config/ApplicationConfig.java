@@ -1,5 +1,8 @@
 package com.AdmerkCorp.config;
 
+import com.AdmerkCorp.model.Company;
+import com.AdmerkCorp.model.user.User;
+import com.AdmerkCorp.repository.CompanyRepository;
 import com.AdmerkCorp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,12 +21,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> {
+            User user = userRepository.findByUsername(username)
+                    .orElse(null);
+
+            Company company = companyRepository.findByName(username)
+                    .orElse(null);
+
+            if (user != null) {
+                return user;
+            } else if (company != null) {
+                return company;
+            } else {
+                throw new UsernameNotFoundException("User or Company not found");
+            }
+        };
     }
+
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

@@ -21,6 +21,5 @@ public class CompanyRegisterRequest {
     private String website;
     private Social social;
     private Location location;
-    private Role role;
 
 }

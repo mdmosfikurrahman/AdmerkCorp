@@ -2,11 +2,33 @@ package com.AdmerkCorp.model.job;
 
 
 public enum Category {
-
-    ACCOUNTING, ADMINISTRATIVE, ADVERTISING, AGRICULTURE, ARTS_AND_DESIGN, BANKING, BIOTECHNOLOGY,
-    BUSINESS_DEVELOPMENT, CONSULTING, CUSTOMER_SERVICE, EDUCATION, ENGINEERING, FINANCE, HEALTHCARE,
-    HUMAN_RESOURCES, INFORMATION_TECHNOLOGY, LEGAL, MANUFACTURING, MARKETING, MEDIA_AND_COMMUNICATIONS,
-    NONPROFIT, RETAIL, SALES, SCIENCE, SPORTS_AND_RECREATION, TELECOMMUNICATIONS, TRANSPORTATION_AND_LOGISTICS,
-    TRAVEL_AND_TOURISM, UTILITIES
-
+    accounting,
+    administration,
+    advertising,
+    agriculture,
+    arts_and_design,
+    banking,
+    biotechnology,
+    business_development,
+    consulting,
+    customer_service,
+    education,
+    engineering,
+    finance,
+    healthcare,
+    human_resource,
+    information_technology,
+    legal,
+    manufacturing,
+    marketing,
+    media_and_communication,
+    nonprofit,
+    retail,
+    sales,
+    science,
+    sports_and_recreation,
+    telecommunications,
+    transportation_and_logistics,
+    travel_and_tourism,
+    utilities;
 }

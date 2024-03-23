@@ -20,7 +20,7 @@ public class Job {
     @Enumerated(EnumType.STRING)
     private JobType jobType;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "location_id")
     private Location location;
 

@@ -3,6 +3,7 @@ package com.AdmerkCorp.service.impl;
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.Company;
+import com.AdmerkCorp.model.job.Category;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.repository.CompanyRepository;
 import com.AdmerkCorp.service.CompanyService;
@@ -27,6 +28,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Job createJob(Job job, Company company) {
         job.setCompany(company);
+        job.setLocation(company.getLocation());
         return jobService.createJob(job);
     }
 

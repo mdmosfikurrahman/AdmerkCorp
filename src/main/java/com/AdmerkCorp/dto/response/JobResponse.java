@@ -20,22 +20,24 @@ public class JobResponse {
     private String benefits;
     private String jobUrl;
     private CompanyResponse company;
+    private LocationResponse location;
 
     public JobResponse(Job job) {
         this.jobTitle = job.getJobTitle();
-        this.jobType = job.getJobType().name();
+        this.jobType = job.getJobType() != null ? job.getJobType().name() : null;
         this.salaryAmount = job.getSalaryAmount();
-        this.salaryDuration = job.getSalaryDuration().name();
-        this.category = job.getCategory().name();
-        this.subCategory = job.getSubCategory().name();
+        this.salaryDuration = job.getSalaryDuration() != null ? job.getSalaryDuration().name() : null;
+        this.category = job.getCategory() != null ? job.getCategory().name() : null;
+        this.subCategory = job.getSubCategory() != null ? job.getSubCategory().name() : null;
         this.overview = job.getOverview();
         this.jobDescription = job.getJobDescription();
-        this.experience = job.getExperience().name();
+        this.experience = job.getExperience() != null ? job.getExperience().name() : null;
         this.responsibility = job.getResponsibility();
         this.requiredSkills = job.getRequiredSkills();
         this.benefits = job.getBenefits();
         this.jobUrl = job.getJobUrl();
-        this.company = new CompanyResponse(job.getCompany());
+        this.company = job.getCompany() != null ? new CompanyResponse(job.getCompany()) : null;
+        this.location = job.getLocation() != null ? new LocationResponse(job.getLocation()) : null;
     }
 
 }

@@ -5,6 +5,7 @@ import com.AdmerkCorp.dto.request.AuthenticationRequest;
 import com.AdmerkCorp.dto.response.AuthenticationResponse;
 import com.AdmerkCorp.dto.request.CompanyRegisterRequest;
 import com.AdmerkCorp.dto.request.UserRegisterRequest;
+import com.AdmerkCorp.dto.response.LoginData;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.exception.ResourceAlreadyExistsException;
 import com.AdmerkCorp.exception.ResourceNotFoundException;
@@ -30,7 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.*;
 
 import static com.AdmerkCorp.model.token.TokenType.BEARER;
 
@@ -52,10 +53,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ResourceAlreadyExistsException("User with this username already exists");
         }
 
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(request.getBirthDate());
+
+        ZoneId toZone = ZoneId.ofOffset("UTC", ZoneOffset.ofHours(6)); // UTC+6
+        ZonedDateTime convertedZoneDateTime = zonedDateTime.withZoneSameInstant(toZone);
+
+        LocalDate convertedLocalDate = convertedZoneDateTime.getHour() >= 12 ?
+                convertedZoneDateTime.plusDays(1).toLocalDate() :
+                convertedZoneDateTime.toLocalDate();
+
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .birthDate(LocalDate.parse(request.getBirthDate()))
+                .birthDate(convertedLocalDate)
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -63,16 +73,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .location(request.getLocation())
                 .build();
 
-        var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        return getAuthenticationResponseForAdminAndUser(request, user);
     }
+
 
     @Override
     public AuthenticationResponse registerAdmin(UserRegisterRequest request) {
@@ -87,15 +90,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(Role.ADMIN)
                 .build();
 
-        var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        return getAuthenticationResponseForAdminAndUser(request, user);
     }
 
     @Override
@@ -115,15 +110,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(Role.COMPANY)
                 .build();
 
-        var savedCompany = companyRepository.save(company);
-        var jwtToken = jwtService.generateToken(company);
-        var refreshToken = jwtService.generateRefreshToken(company);
-        saveCompanyToken(savedCompany, jwtToken);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        return getAuthenticationResponseForCompany(request, company);
     }
 
     @Override
@@ -156,9 +143,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             revokeAllCompanyTokens(company);
             saveCompanyToken(company, jwtToken);
 
+            var loginData = LoginData.builder()
+                    .email(company.getCompanyMail())
+                    .username(company.getName())
+                    .name(company.getCompanyName())
+                    .role(String.valueOf(Role.COMPANY).toLowerCase())
+                    .build();
+
             return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                    .loginData(loginData)
                     .build();
         }
 
@@ -181,9 +177,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
 
+        var loginData = LoginData.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .name(user.getFirstName() + ' ' + user.getLastName())
+                .role(String.valueOf(Role.USER).toLowerCase())
+                .build();
+
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .loginData(loginData)
                 .build();
     }
 
@@ -208,6 +213,48 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .revoked(false)
                 .build();
         companyTokenRepository.save(token);
+    }
+
+    private AuthenticationResponse getAuthenticationResponseForAdminAndUser(UserRegisterRequest request, User user) {
+        var savedUser = userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
+
+        var loginData = LoginData.builder()
+                .email(request.getEmail())
+                .username(request.getUsername())
+                .name(user.getFirstName() + ' ' + user.getLastName())
+                .role(String.valueOf(Role.USER).toLowerCase())
+                .build();
+
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .loginData(loginData)
+                .build();
+    }
+
+    private AuthenticationResponse getAuthenticationResponseForCompany(CompanyRegisterRequest request, Company company) {
+        var savedCompany = companyRepository.save(company);
+        var jwtToken = jwtService.generateToken(company);
+        var refreshToken = jwtService.generateRefreshToken(company);
+        saveCompanyToken(savedCompany, jwtToken);
+
+        var loginData = LoginData.builder()
+                .email(request.getCompanyMail())
+                .username(request.getName())
+                .name(request.getName())
+                .role(String.valueOf(Role.COMPANY).toLowerCase())
+                .build();
+
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .loginData(loginData)
+                .build();
     }
 
     private void revokeAllCompanyTokens(Company company) {
@@ -265,9 +312,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             var accessToken = jwtService.generateToken(user);
             revokeAllUserTokens(user);
             saveUserToken(user, accessToken);
+            var loginData = LoginData.builder()
+                    .email(user.getEmail())
+                    .username(user.getUsername())
+                .name(user.getFirstName() + ' ' + user.getLastName())
+                    .role(String.valueOf(Role.USER).toLowerCase())
+                    .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                    .loginData(loginData)
                     .build();
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         }
@@ -278,9 +333,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             var accessToken = jwtService.generateToken(company);
             revokeAllCompanyTokens(company);
             saveCompanyToken(company, accessToken);
+            var loginData = LoginData.builder()
+                    .email(company.getCompanyMail())
+                    .username(company.getName())
+                    .name(company.getCompanyName())
+                    .role(String.valueOf(Role.COMPANY).toLowerCase())
+                    .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                    .loginData(loginData)
                     .build();
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         }

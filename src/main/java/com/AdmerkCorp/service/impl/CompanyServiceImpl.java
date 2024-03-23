@@ -46,12 +46,8 @@ public class CompanyServiceImpl implements CompanyService {
 
         var company = (Company) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), company.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), company.getPassword())) {
             throw new AccessForbiddenException("Wrong password");
-        }
-
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new AccessForbiddenException("Password doesn't match");
         }
 
         company.setPassword(passwordEncoder.encode(request.getNewPassword()));

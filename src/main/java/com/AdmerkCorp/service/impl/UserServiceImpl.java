@@ -45,12 +45,8 @@ public class UserServiceImpl implements UserService {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new AccessForbiddenException("Wrong password");
-        }
-
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new AccessForbiddenException("Password doesn't match");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));

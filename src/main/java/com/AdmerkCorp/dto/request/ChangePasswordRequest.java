@@ -9,8 +9,7 @@ import lombok.Data;
 @Builder
 public class ChangePasswordRequest {
 
-    private String currentPassword;
+    private String password;
     private String newPassword;
-    private String confirmationPassword;
 
 }

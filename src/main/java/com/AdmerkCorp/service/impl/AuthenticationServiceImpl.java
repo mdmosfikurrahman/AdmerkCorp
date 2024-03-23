@@ -68,12 +68,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .birthDate(convertedLocalDate)
                 .email(request.getEmail())
                 .username(request.getUsername())
+                .isRefugee(request.getIsRefugee())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .location(request.getLocation())
+                .refugeeNumber(request.getIsRefugee() ? generateRefugeeNumber(request) : null)
                 .build();
 
         return getAuthenticationResponseForAdminAndUser(request, user);
+    }
+
+    private String generateRefugeeNumber(UserRegisterRequest request) {
+        return
+                "REF"
+                        + request.getFirstName().toUpperCase().charAt(0)
+                        + request.getLastName().toUpperCase().charAt(0)
+                        + System.currentTimeMillis();
     }
 
 

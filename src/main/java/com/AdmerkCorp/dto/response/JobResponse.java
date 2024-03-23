@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class JobResponse {
 
+    private Long jobId;
     private String jobTitle;
     private String jobType;
     private int salaryAmount;
@@ -23,6 +24,7 @@ public class JobResponse {
     private LocationResponse location;
 
     public JobResponse(Job job) {
+        this.jobId = job.getId();
         this.jobTitle = job.getJobTitle();
         this.jobType = job.getJobType() != null ? job.getJobType().name() : null;
         this.salaryAmount = job.getSalaryAmount();

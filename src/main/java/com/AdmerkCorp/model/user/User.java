@@ -28,6 +28,7 @@ public class User implements UserDetails {
     private String password;
     private boolean isRefugee;
     private Role role;
+    private String refugeeNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")

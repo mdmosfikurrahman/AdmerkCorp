@@ -14,6 +14,8 @@ public class UserResponse {
     private LocalDate birthDate;
     private String username;
     private LocationResponse location;
+    private Boolean isRefugee;
+    private String refugeeNumber;
 
     public UserResponse(User user) {
         this.firstName = user.getFirstName();
@@ -22,6 +24,8 @@ public class UserResponse {
         this.username = user.getUsername();
         this.birthDate = user.getBirthDate();
         this.location = new LocationResponse(user.getLocation());
+        this.isRefugee = user.isRefugee();
+        this.refugeeNumber = user.getRefugeeNumber();
     }
 
 }

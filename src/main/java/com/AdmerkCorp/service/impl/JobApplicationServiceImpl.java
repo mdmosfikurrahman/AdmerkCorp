@@ -11,6 +11,7 @@ import com.AdmerkCorp.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,12 +21,21 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final JobApplicationRepository jobApplicationRepository;
     private final JobService jobService;
 
-    public void applyToJob(User user, Long jobId, CoverLetter coverLetter) {
+//    public void applyToJob(User user, Long jobId, CoverLetter coverLetter) {
+//        Job job = jobService.getJobById(jobId);
+//        JobApplication jobApplication = new JobApplication();
+//        jobApplication.setUser(user);
+//        jobApplication.setJob(job);
+//        jobApplication.setCoverLetter(coverLetter);
+//        jobApplicationRepository.save(jobApplication);
+//    }
+
+    public void applyToJob(User user, Long jobId) {
         Job job = jobService.getJobById(jobId);
         JobApplication jobApplication = new JobApplication();
         jobApplication.setUser(user);
         jobApplication.setJob(job);
-        jobApplication.setCoverLetter(coverLetter);
+        jobApplication.setAppliedOn(LocalDateTime.now());
         jobApplicationRepository.save(jobApplication);
     }
 

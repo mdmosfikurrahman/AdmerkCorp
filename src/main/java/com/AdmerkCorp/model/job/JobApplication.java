@@ -4,6 +4,8 @@ import com.AdmerkCorp.model.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 public class JobApplication {
@@ -20,7 +22,10 @@ public class JobApplication {
     @JoinColumn(name = "job_id")
     private Job job;
 
-    @Embedded
-    private CoverLetter coverLetter;
+    @JoinColumn(name = "applied_on")
+    private LocalDateTime appliedOn;
+
+//    @Embedded
+//    private CoverLetter coverLetter;
 
 }

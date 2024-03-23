@@ -71,12 +71,24 @@ public class UserController {
     }
 
 
+//    @PostMapping("/application/{jobId}")
+//    @PreAuthorize("hasAuthority('user:job_apply')")
+//    public ResponseEntity<String> applyJob(@PathVariable Long jobId, @RequestBody CoverLetter coverLetter, Principal principal) {
+//        User user = userService.getUserByUsername(principal.getName());
+//        try {
+//            jobApplicationService.applyToJob(user, jobId, coverLetter);
+//            return ResponseEntity.ok("Job applied successfully!");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to apply for the job");
+//        }
+//    }
+
     @PostMapping("/application/{jobId}")
     @PreAuthorize("hasAuthority('user:job_apply')")
-    public ResponseEntity<String> applyJob(@PathVariable Long jobId, @RequestBody CoverLetter coverLetter, Principal principal) {
+    public ResponseEntity<String> applyJob(@PathVariable Long jobId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         try {
-            jobApplicationService.applyToJob(user, jobId, coverLetter);
+            jobApplicationService.applyToJob(user, jobId);
             return ResponseEntity.ok("Job applied successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to apply for the job");

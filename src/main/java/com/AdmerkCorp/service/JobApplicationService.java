@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface JobApplicationService {
 
-    void applyToJob(User user, Long jobId, CoverLetter coverLetter);
+//    void applyToJob(User user, Long jobId, CoverLetter coverLetter);
+    void applyToJob(User user, Long jobId);
     List<JobApplication> getApplicationsByUser(User user);
     List<JobApplication> getAllApplications();
     void deleteApplicationById(Long applicationId);

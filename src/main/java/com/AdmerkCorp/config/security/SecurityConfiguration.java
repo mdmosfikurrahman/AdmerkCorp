@@ -26,6 +26,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration {
     public static final String[] whiteListedRoutes = new String[]{
             "/",
+            "/terms",
             "/auth/**",
             "/job/**",
             "/admin"

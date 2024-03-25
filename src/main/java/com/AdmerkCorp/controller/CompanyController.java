@@ -8,6 +8,7 @@ import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.Company;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;
+import com.AdmerkCorp.model.job.JobApplicationStatus;
 import com.AdmerkCorp.service.CompanyService;
 import com.AdmerkCorp.service.JobApplicationService;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,32 @@ public class CompanyController {
         return companyApplications.stream()
                 .map(JobApplicationResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/application/{userId}")
+    @PreAuthorize("hasAuthority('company:read')")
+    public List<JobApplicationResponse> getApplicationByUserId(Principal principal, @PathVariable Long userId) {
+        Company company = companyService.getCompanyByUsername(principal.getName());
+
+        List<JobApplication> companyApplications = jobApplicationService.getApplicationsByCompanyAndUserId(company, userId);
+
+        return companyApplications.stream()
+                .map(JobApplicationResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/application/respond/{userId}")
+    @PreAuthorize("hasAuthority('company:respond')")
+    public ResponseEntity<String> respondToApplication(Principal principal, @PathVariable Long userId, @RequestBody String response) {
+        try {
+            Company company = companyService.getCompanyByUsername(principal.getName());
+            jobApplicationService.respondToApplication(company, userId, JobApplicationStatus.valueOf(response));
+            return ResponseEntity.ok("Response sent successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid response status");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to respond to application");
+        }
     }
 
 

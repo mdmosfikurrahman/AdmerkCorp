@@ -25,7 +25,7 @@ public class JobApplication {
     @JoinColumn(name = "applied_on")
     private LocalDateTime appliedOn;
 
-//    @Embedded
-//    private CoverLetter coverLetter;
+    @Enumerated(EnumType.STRING)
+    private JobApplicationStatus status;
 
 }

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Data
 public class UserResponse {
 
+    private Long userId;
     private String firstName;
     private String lastName;
     private String email;
@@ -18,6 +19,7 @@ public class UserResponse {
     private String refugeeNumber;
 
     public UserResponse(User user) {
+        this.userId = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();

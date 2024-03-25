@@ -158,6 +158,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .username(company.getName())
                     .name(company.getCompanyName())
                     .role(String.valueOf(Role.COMPANY).toLowerCase())
+                    .isRefugee(false)
                     .build();
 
             return AuthenticationResponse.builder()
@@ -192,6 +193,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .username(user.getUsername())
                 .name(user.getFirstName() + ' ' + user.getLastName())
                 .role(String.valueOf(Role.USER).toLowerCase())
+                .isRefugee(user.isRefugee())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -236,6 +238,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .username(request.getUsername())
                 .name(user.getFirstName() + ' ' + user.getLastName())
                 .role(String.valueOf(Role.USER).toLowerCase())
+                .isRefugee(user.isRefugee())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -257,6 +260,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .username(request.getName())
                 .name(request.getName())
                 .role(String.valueOf(Role.COMPANY).toLowerCase())
+                .isRefugee(false)
                 .build();
 
         return AuthenticationResponse.builder()
@@ -325,8 +329,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             var loginData = LoginData.builder()
                     .email(user.getEmail())
                     .username(user.getUsername())
-                .name(user.getFirstName() + ' ' + user.getLastName())
+                    .name(user.getFirstName() + ' ' + user.getLastName())
                     .role(String.valueOf(Role.USER).toLowerCase())
+                    .isRefugee(user.isRefugee())
                     .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)
@@ -348,6 +353,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .username(company.getName())
                     .name(company.getCompanyName())
                     .role(String.valueOf(Role.COMPANY).toLowerCase())
+                    .isRefugee(false)
                     .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)

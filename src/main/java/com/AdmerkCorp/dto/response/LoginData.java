@@ -11,5 +11,6 @@ public class LoginData {
     private String name;
     private String email;
     private String role;
+    private Boolean isRefugee;
 
 }

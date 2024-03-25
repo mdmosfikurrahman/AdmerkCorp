@@ -47,7 +47,8 @@ public enum Role {
             Set.of(
                     COMPANY_READ,
                     COMPANY_PASSWORD_CHANGE,
-                    COMPANY_JOB_CREATE
+                    COMPANY_JOB_CREATE,
+                    COMPANY_JOB_RESPOND
             )
     )
 

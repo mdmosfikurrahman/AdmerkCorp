@@ -5,7 +5,6 @@ import com.AdmerkCorp.dto.response.JobApplicationResponse;
 import com.AdmerkCorp.dto.response.JobResponse;
 import com.AdmerkCorp.dto.response.UserResponse;
 import com.AdmerkCorp.exception.AccessForbiddenException;
-import com.AdmerkCorp.model.job.CoverLetter;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.model.job.JobApplication;
 import com.AdmerkCorp.model.user.User;
@@ -69,19 +68,6 @@ public class UserController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(applicationResponseDTOs);
     }
-
-
-//    @PostMapping("/application/{jobId}")
-//    @PreAuthorize("hasAuthority('user:job_apply')")
-//    public ResponseEntity<String> applyJob(@PathVariable Long jobId, @RequestBody CoverLetter coverLetter, Principal principal) {
-//        User user = userService.getUserByUsername(principal.getName());
-//        try {
-//            jobApplicationService.applyToJob(user, jobId, coverLetter);
-//            return ResponseEntity.ok("Job applied successfully!");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to apply for the job");
-//        }
-//    }
 
     @PostMapping("/application/{jobId}")
     @PreAuthorize("hasAuthority('user:job_apply')")

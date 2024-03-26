@@ -24,12 +24,18 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     public void applyToJob(User user, Long jobId) {
         Job job = jobService.getJobById(jobId);
-        JobApplication jobApplication = new JobApplication();
-        jobApplication.setUser(user);
-        jobApplication.setJob(job);
-        jobApplication.setAppliedOn(LocalDateTime.now());
-        jobApplication.setStatus(JobApplicationStatus.PENDING);
-        jobApplicationRepository.save(jobApplication);
+        List<JobApplication> existingApplications = jobApplicationRepository.findByUserAndJob(user, job);
+
+        if (existingApplications.isEmpty()) {
+            JobApplication jobApplication = new JobApplication();
+            jobApplication.setUser(user);
+            jobApplication.setJob(job);
+            jobApplication.setAppliedOn(LocalDateTime.now());
+            jobApplication.setStatus(JobApplicationStatus.PENDING);
+            jobApplicationRepository.save(jobApplication);
+        } else {
+            throw new IllegalArgumentException("User has already applied to this job.");
+        }
     }
 
     public List<JobApplication> getApplicationsByUser(User user) {

@@ -1,8 +1,14 @@
 package com.AdmerkCorp.service.impl;
 
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.UpdateCompanyProfileRequest;
+import com.AdmerkCorp.dto.response.CompanyResponse;
+import com.AdmerkCorp.dto.response.LocationResponse;
+import com.AdmerkCorp.dto.response.SocialResponse;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.Company;
+import com.AdmerkCorp.model.Location;
+import com.AdmerkCorp.model.Social;
 import com.AdmerkCorp.model.job.Category;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.repository.CompanyRepository;
@@ -67,6 +73,37 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void deleteCompanyById(Long companyId) {
         companyRepository.deleteById(companyId);
+    }
+
+    @Override
+    public void updateCompanyProfile(Long companyId, UpdateCompanyProfileRequest companyResponse) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found with ID: " + companyId));
+
+        company.setCompanyName(companyResponse.getCompanyName());
+        company.setCompanyMail(companyResponse.getCompanyMail());
+        company.setWebsite(companyResponse.getWebsite());
+
+        // Update Social
+        Social social = company.getSocial();
+        Social updateSocial = companyResponse.getSocial();
+        social.setFacebook(updateSocial.getFacebook());
+        social.setLinkedIn(updateSocial.getLinkedIn());
+        social.setTwitter(updateSocial.getTwitter());
+        social.setInstagram(updateSocial.getInstagram());
+        social.setWhatsApp(updateSocial.getWhatsApp());
+
+        // Update Location
+        Location location = company.getLocation();
+        Location updateLocation = companyResponse.getLocation();
+        location.setCountry(updateLocation.getCountry());
+        location.setState(updateLocation.getState());
+        location.setDivision(updateLocation.getDivision());
+        location.setCity(updateLocation.getCity());
+        location.setAddress(updateLocation.getAddress());
+        location.setZipCode(updateLocation.getZipCode());
+
+        companyRepository.save(company);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.AdmerkCorp.controller;
 
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.UpdateCompanyProfileRequest;
 import com.AdmerkCorp.dto.response.CompanyResponse;
 import com.AdmerkCorp.dto.response.JobApplicationResponse;
 import com.AdmerkCorp.dto.response.JobResponse;
@@ -108,6 +109,17 @@ public class CompanyController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(jobResponseList);
+    }
+
+    @PutMapping("/account/{companyId}")
+    @PreAuthorize("hasAuthority('company:update_profile')")
+    public ResponseEntity<String> updateCompanyProfile(@PathVariable Long companyId, @RequestBody UpdateCompanyProfileRequest request) {
+        try {
+            companyService.updateCompanyProfile(companyId, request);
+            return ResponseEntity.ok("Company profile updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update company profile");
+        }
     }
 
 }

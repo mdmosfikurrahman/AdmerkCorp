@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class CompanyResponse {
 
+    private Long companyId;
     private String name;
     private String companyName;
     private String companyMail;
@@ -14,6 +15,7 @@ public class CompanyResponse {
     private LocationResponse location;
 
     public CompanyResponse(Company company) {
+        this.companyId = company.getId();
         this.name = company.getName();
         this.companyName = company.getCompanyName();
         this.companyMail = company.getCompanyMail();

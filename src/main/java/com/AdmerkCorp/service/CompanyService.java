@@ -1,6 +1,8 @@
 package com.AdmerkCorp.service;
 
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.UpdateCompanyProfileRequest;
+import com.AdmerkCorp.dto.response.CompanyResponse;
 import com.AdmerkCorp.model.Company;
 import com.AdmerkCorp.model.job.Job;
 
@@ -15,5 +17,5 @@ public interface CompanyService {
     String changePassword(ChangePasswordRequest request, Principal connectedUser);
     List<Company> getAllCompanies();
     void deleteCompanyById(Long companyId);
-
+    void updateCompanyProfile(Long companyId, UpdateCompanyProfileRequest companyResponse);
 }

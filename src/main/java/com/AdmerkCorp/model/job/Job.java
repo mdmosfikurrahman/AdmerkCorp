@@ -5,6 +5,7 @@ import com.AdmerkCorp.model.Location;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -50,6 +51,8 @@ public class Job {
     private String benefits;
 
     private String jobUrl;
+
+    private LocalDateTime postedOn;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
     private List<JobApplication> applications;

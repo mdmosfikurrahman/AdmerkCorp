@@ -20,10 +20,15 @@ public class Company implements UserDetails {
     private Long id;
 
     private String name;
+
     private String companyName;
+
     private String companyMail;
+
     private String password;
+
     private String website;
+
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
 
         user.setEmail(request.getEmail());
         user.setBirthDate(request.getBirthDate());
+        user.setContactNumber(request.getContactNumber());
 
         Location location = user.getLocation();
         location.setDivision(request.getLocation().getDivision());

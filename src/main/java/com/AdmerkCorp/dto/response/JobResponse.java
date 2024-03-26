@@ -3,6 +3,8 @@ package com.AdmerkCorp.dto.response;
 import com.AdmerkCorp.model.job.Job;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class JobResponse {
 
@@ -22,6 +24,7 @@ public class JobResponse {
     private String jobUrl;
     private CompanyResponse company;
     private LocationResponse location;
+    private LocalDateTime postedOn;
 
     public JobResponse(Job job) {
         this.jobId = job.getId();
@@ -38,6 +41,7 @@ public class JobResponse {
         this.requiredSkills = job.getRequiredSkills();
         this.benefits = job.getBenefits();
         this.jobUrl = job.getJobUrl();
+        this.postedOn = job.getPostedOn();
         this.company = job.getCompany() != null ? new CompanyResponse(job.getCompany()) : null;
         this.location = job.getLocation() != null ? new LocationResponse(job.getLocation()) : null;
     }

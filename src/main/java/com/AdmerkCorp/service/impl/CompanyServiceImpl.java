@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,6 +36,7 @@ public class CompanyServiceImpl implements CompanyService {
     public Job createJob(Job job, Company company) {
         job.setCompany(company);
         job.setLocation(company.getLocation());
+        job.setPostedOn(LocalDateTime.now());
         return jobService.createJob(job);
     }
 

@@ -20,5 +20,6 @@ public class UserRegisterRequest {
     private String password;
     private Boolean isRefugee;
     private Location location;
+    private String contactNumber;
 
 }

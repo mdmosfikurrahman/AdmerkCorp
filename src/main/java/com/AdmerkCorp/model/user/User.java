@@ -21,14 +21,24 @@ public class User implements UserDetails {
     private Long id;
 
     private String firstName;
+
     private String lastName;
+
     private LocalDate birthDate;
+
     private String email;
+
     private String username;
+
     private String password;
+
     private boolean isRefugee;
+
     private Role role;
+
     private String refugeeNumber;
+
+    private String contactNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")

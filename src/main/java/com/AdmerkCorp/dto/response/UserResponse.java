@@ -9,14 +9,24 @@ import java.time.LocalDate;
 public class UserResponse {
 
     private Long userId;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private LocalDate birthDate;
+
     private String username;
+
     private LocationResponse location;
+
     private Boolean isRefugee;
+
     private String refugeeNumber;
+
+    private String contactNumber;
 
     public UserResponse(User user) {
         this.userId = user.getId();
@@ -28,6 +38,7 @@ public class UserResponse {
         this.location = new LocationResponse(user.getLocation());
         this.isRefugee = user.isRefugee();
         this.refugeeNumber = user.getRefugeeNumber();
+        this.contactNumber = user.getContactNumber();
     }
 
 }

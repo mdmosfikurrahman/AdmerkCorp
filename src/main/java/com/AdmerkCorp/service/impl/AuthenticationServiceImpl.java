@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.*;
+import java.util.UUID;
 
 import static com.AdmerkCorp.model.token.TokenType.BEARER;
 
@@ -79,11 +80,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private String generateRefugeeNumber(UserRegisterRequest request) {
-        return
-                "REF"
-                        + request.getFirstName().toUpperCase().charAt(0)
-                        + request.getLastName().toUpperCase().charAt(0)
-                        + System.currentTimeMillis();
+        String uuid = UUID.randomUUID().toString();
+        String initials = String.valueOf(request.getFirstName().charAt(0)).toUpperCase() + String.valueOf(request.getLastName().charAt(0)).toUpperCase();
+        return initials + "-" + uuid.substring(0, 6).toUpperCase();
     }
 
 

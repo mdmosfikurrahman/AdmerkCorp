@@ -1,6 +1,7 @@
 package com.AdmerkCorp.controller;
 
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.UpdateUserProfileRequest;
 import com.AdmerkCorp.dto.response.JobApplicationResponse;
 import com.AdmerkCorp.dto.response.JobResponse;
 import com.AdmerkCorp.dto.response.UserResponse;
@@ -35,6 +36,17 @@ public class UserController {
         User user = userService.getUserByUsername(principal.getName());
         UserResponse userResponse = new UserResponse(user);
         return ResponseEntity.ok(userResponse);
+    }
+
+    @PutMapping("/account/{userId}")
+    @PreAuthorize("hasAuthority('user:update_profile')")
+    public ResponseEntity<String> updateUserProfile(@PathVariable Long userId, @RequestBody UpdateUserProfileRequest request) {
+        try {
+            userService.updateUserProfile(userId, request);
+            return ResponseEntity.ok("User profile updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user profile");
+        }
     }
 
     @PutMapping("/password")

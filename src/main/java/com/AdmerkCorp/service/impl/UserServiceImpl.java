@@ -1,9 +1,11 @@
 package com.AdmerkCorp.service.impl;
 
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.UpdateUserProfileRequest;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.exception.ResourceAlreadyExistsException;
 import com.AdmerkCorp.exception.ResourceNotFoundException;
+import com.AdmerkCorp.model.Location;
 import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.model.job.Job;
 import com.AdmerkCorp.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +79,44 @@ public class UserServiceImpl implements UserService {
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
+    }
+
+    @Override
+    public void updateUserProfile(Long userId, UpdateUserProfileRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+
+        if (user.isRefugee() && !request.getIsRefugee()) {
+            user.setRefugee(false);
+            user.setRefugeeNumber(null);
+        } else {
+            user.setRefugee(request.getIsRefugee());
+            if (request.getIsRefugee() && user.getRefugeeNumber() == null) {
+                user.setRefugeeNumber(generateRefugeeNumber(request));
+            }
+        }
+
+        user.setEmail(request.getEmail());
+        user.setBirthDate(request.getBirthDate());
+
+        Location location = user.getLocation();
+        location.setDivision(request.getLocation().getDivision());
+        location.setCountry(request.getLocation().getCountry());
+        location.setState(request.getLocation().getState());
+        location.setCity(request.getLocation().getCity());
+        location.setAddress(request.getLocation().getAddress());
+        location.setZipCode(request.getLocation().getZipCode());
+
+        userRepository.save(user);
+    }
+
+    private String generateRefugeeNumber(UpdateUserProfileRequest request) {
+        String uuid = UUID.randomUUID().toString();
+        String initials = String.valueOf(request.getFirstName().charAt(0)).toUpperCase() + String.valueOf(request.getLastName().charAt(0)).toUpperCase();
+        return initials + "-" + uuid.substring(0, 6).toUpperCase();
     }
 
 }

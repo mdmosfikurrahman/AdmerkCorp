@@ -23,6 +23,7 @@ public enum Permission {
 
     // User Permission Authority
     USER_READ("user:read"),
+    USER_UPDATE_PROFILE("user:update_profile"),
     USER_READ_JOBS("user:read_jobs"),
     USER_JOB_APPLY("user:job_apply"),
     USER_PASSWORD_CHANGE("user:password_change"),

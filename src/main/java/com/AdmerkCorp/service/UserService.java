@@ -1,6 +1,7 @@
 package com.AdmerkCorp.service;
 
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
+import com.AdmerkCorp.dto.request.UpdateUserProfileRequest;
 import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.model.job.Job;
 
@@ -15,5 +16,6 @@ public interface UserService {
     List<User> getAllUsers();
     void deleteUserById(Long id);
     User getUserByUsername(String username);
+    void updateUserProfile(Long userId, UpdateUserProfileRequest request);
 
 }

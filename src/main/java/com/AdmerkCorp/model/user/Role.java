@@ -20,7 +20,9 @@ public enum Role {
                     USER_UPDATE_PROFILE,
                     USER_READ_JOBS,
                     USER_JOB_APPLY,
-                    USER_PASSWORD_CHANGE
+                    USER_PASSWORD_CHANGE,
+                    USER_CV_UPLOAD,
+                    USER_CV_DOWNLOAD
             )
     ),
 
@@ -50,7 +52,8 @@ public enum Role {
                     COMPANY_UPDATE_PROFILE,
                     COMPANY_PASSWORD_CHANGE,
                     COMPANY_JOB_CREATE,
-                    COMPANY_JOB_RESPOND
+                    COMPANY_JOB_RESPOND,
+                    COMPANY_CV_DOWNLOAD
             )
     )
 

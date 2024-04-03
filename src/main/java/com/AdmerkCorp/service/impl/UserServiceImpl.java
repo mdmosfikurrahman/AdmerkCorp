@@ -12,10 +12,21 @@ import com.AdmerkCorp.repository.UserRepository;
 import com.AdmerkCorp.service.JobService;
 import com.AdmerkCorp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +38,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JobService jobService;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${cv.upload.directory}")
+    private String cvUploadDirectory;
 
     @Override
     public void validateUser(String usernameOrEmail) {
@@ -104,7 +118,6 @@ public class UserServiceImpl implements UserService {
         user.setContactNumber(request.getContactNumber());
 
         Location location = user.getLocation();
-        location.setDivision(request.getLocation().getDivision());
         location.setCountry(request.getLocation().getCountry());
         location.setState(request.getLocation().getState());
         location.setCity(request.getLocation().getCity());
@@ -114,10 +127,58 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void saveCV(Long userId, MultipartFile file, String originalFileName) throws IOException {
+        Path uploadPath = Paths.get(cvUploadDirectory).toAbsolutePath().normalize();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        String fileName = "CV_" + user.getRefugeeNumber() + ".pdf";
+        Path filePath = uploadPath.resolve(fileName);
+
+        if (user.getCvFileName() != null && Files.exists(filePath)) {
+            Files.delete(filePath);
+        }
+
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        user.setCvFileName(fileName);
+        user.setCvUploaded(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public ResponseEntity<ByteArrayResource> downloadCV(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        if (user.getCvFileName() == null) {
+            throw new ResourceNotFoundException("CV not found for user with ID: " + userId);
+        }
+
+        try {
+            Path filePath = Paths.get(cvUploadDirectory).resolve(user.getCvFileName());
+            byte[] data = Files.readAllBytes(filePath);
+            ByteArrayResource resource = new ByteArrayResource(data);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentLength(data.length);
+            headers.setContentDispositionFormData("attachment", "CV_" + user.getRefugeeNumber() + ".pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(resource);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read CV file", e);
+        }
+    }
+
     private String generateRefugeeNumber(UpdateUserProfileRequest request) {
         String uuid = UUID.randomUUID().toString();
         String initials = String.valueOf(request.getFirstName().charAt(0)).toUpperCase() + String.valueOf(request.getLastName().charAt(0)).toUpperCase();
-        return initials + "-" + uuid.substring(0, 6).toUpperCase();
+        return initials + "_" + uuid.substring(0, 6).toUpperCase();
     }
 
 }

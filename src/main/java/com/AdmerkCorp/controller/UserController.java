@@ -12,11 +12,14 @@ import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.service.JobApplicationService;
 import com.AdmerkCorp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -91,6 +94,23 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to apply for the job");
         }
+    }
+
+    @PostMapping("/upload-cv/{userId}")
+    @PreAuthorize("hasAuthority('user:cv_upload')")
+    public ResponseEntity<String> uploadCV(@PathVariable Long userId, @RequestParam("file") MultipartFile file, @RequestParam("fileName") String fileName) {
+        try {
+            userService.saveCV(userId, file, fileName);
+            return ResponseEntity.ok("CV uploaded successfully!");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload CV");
+        }
+    }
+
+    @GetMapping("/download-cv/{userId}")
+    @PreAuthorize("hasAuthority('user:cv_download')")
+    public ResponseEntity<ByteArrayResource> downloadCV(@PathVariable Long userId) {
+        return userService.downloadCV(userId);
     }
 
 }

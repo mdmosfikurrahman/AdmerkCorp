@@ -75,6 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .location(request.getLocation())
                 .refugeeNumber(request.getIsRefugee() ? generateRefugeeNumber(request) : null)
                 .contactNumber(request.getContactNumber())
+                .cvUploaded(false)
                 .build();
 
         return getAuthenticationResponseForAdminAndUser(request, user);

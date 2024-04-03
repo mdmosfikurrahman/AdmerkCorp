@@ -18,6 +18,7 @@ public enum Permission {
     COMPANY_UPDATE_PROFILE("company:update_profile"),
     COMPANY_JOB_CREATE("company:create"),
     COMPANY_JOB_RESPOND("company:respond"),
+    COMPANY_CV_DOWNLOAD("company:cv_download"),
     COMPANY_PASSWORD_CHANGE("company:password_change"),
     COMPANY_DELETE("company:delete"),
     COMPANY_JOB_DELETE("company:job_delete"),
@@ -29,6 +30,8 @@ public enum Permission {
     USER_JOB_APPLY("user:job_apply"),
     USER_PASSWORD_CHANGE("user:password_change"),
     USER_DELETE("user:delete"),
+    USER_CV_UPLOAD("user:cv_upload"),
+    USER_CV_DOWNLOAD("user:cv_download"),
     ;
 
     private final String permission;

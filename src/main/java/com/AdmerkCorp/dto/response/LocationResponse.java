@@ -8,7 +8,6 @@ public class LocationResponse {
 
     private String country;
     private String state;
-    private String division;
     private String city;
     private String address;
     private String zipCode;
@@ -16,7 +15,6 @@ public class LocationResponse {
     public LocationResponse(Location location) {
         this.country = location.getCountry();
         this.state = location.getState();
-        this.division = location.getDivision();
         this.city = location.getCity();
         this.address = location.getAddress();
         this.zipCode = location.getZipCode();

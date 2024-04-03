@@ -40,6 +40,10 @@ public class User implements UserDetails {
 
     private String contactNumber;
 
+    private String cvFileName;
+
+    private Boolean cvUploaded;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
     private Location location;

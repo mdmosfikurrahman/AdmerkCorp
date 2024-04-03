@@ -13,6 +13,7 @@ import com.AdmerkCorp.model.job.JobApplicationStatus;
 import com.AdmerkCorp.service.CompanyService;
 import com.AdmerkCorp.service.JobApplicationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -120,6 +121,12 @@ public class CompanyController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update company profile");
         }
+    }
+
+    @GetMapping("/download-cv/{userId}")
+    @PreAuthorize("hasAuthority('company:cv_download')")
+    public ResponseEntity<ByteArrayResource> downloadCV(@PathVariable Long userId) {
+        return companyService.downloadApplicantCV(userId);
     }
 
 }

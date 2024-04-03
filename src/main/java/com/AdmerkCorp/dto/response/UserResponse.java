@@ -28,6 +28,10 @@ public class UserResponse {
 
     private String contactNumber;
 
+    private String cvFileName;
+
+    private Boolean cvUploaded;
+
     public UserResponse(User user) {
         this.userId = user.getId();
         this.firstName = user.getFirstName();
@@ -39,6 +43,8 @@ public class UserResponse {
         this.isRefugee = user.isRefugee();
         this.refugeeNumber = user.getRefugeeNumber();
         this.contactNumber = user.getContactNumber();
+        this.cvFileName = user.getCvFileName();
+        this.cvUploaded = user.getCvUploaded();
     }
 
 }

@@ -15,8 +15,6 @@ public class Location {
 
     private String state;
 
-    private String division;
-
     private String city;
 
     private String address;

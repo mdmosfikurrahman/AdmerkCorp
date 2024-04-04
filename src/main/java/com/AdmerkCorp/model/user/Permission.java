@@ -15,6 +15,9 @@ public enum Permission {
 
     // Manager Permission Authority
     COMPANY_READ("company:read"),
+    COMPANY_READ_APPLICATION("company:read_application"),
+    COMPANY_READ_APPLICATION_BY_USER_ID("company:read_application_by_userId"),
+    COMPANY_READ_JOB("company:read_job"),
     COMPANY_UPDATE_PROFILE("company:update_profile"),
     COMPANY_JOB_CREATE("company:create"),
     COMPANY_JOB_RESPOND("company:respond"),

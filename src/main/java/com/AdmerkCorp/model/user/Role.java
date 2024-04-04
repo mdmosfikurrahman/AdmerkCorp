@@ -53,7 +53,10 @@ public enum Role {
                     COMPANY_PASSWORD_CHANGE,
                     COMPANY_JOB_CREATE,
                     COMPANY_JOB_RESPOND,
-                    COMPANY_CV_DOWNLOAD
+                    COMPANY_CV_DOWNLOAD,
+                    COMPANY_READ_APPLICATION,
+                    COMPANY_READ_APPLICATION_BY_USER_ID,
+                    COMPANY_READ_JOB
             )
     )
 

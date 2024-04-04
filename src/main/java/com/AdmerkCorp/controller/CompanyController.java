@@ -53,7 +53,7 @@ public class CompanyController {
     }
 
     @GetMapping("/application")
-    @PreAuthorize("hasAuthority('company:read')")
+    @PreAuthorize("hasAuthority('company:read_application')")
     public List<JobApplicationResponse> getAllApplications(Principal principal) {
         Company company = companyService.getCompanyByUsername(principal.getName());
 
@@ -65,7 +65,7 @@ public class CompanyController {
     }
 
     @GetMapping("/application/{userId}")
-    @PreAuthorize("hasAuthority('company:read')")
+    @PreAuthorize("hasAuthority('company:read_application_by_userId')")
     public List<JobApplicationResponse> getApplicationByUserId(Principal principal, @PathVariable Long userId) {
         Company company = companyService.getCompanyByUsername(principal.getName());
 
@@ -100,7 +100,7 @@ public class CompanyController {
     }
 
     @GetMapping("/job")
-    @PreAuthorize("hasAuthority('company:read')")
+    @PreAuthorize("hasAuthority('company:read_job')")
     public ResponseEntity<List<JobResponse>> getAllJobsByCompany(Principal principal) {
         Company company = companyService.getCompanyByUsername(principal.getName());
         List<Job> jobs = companyService.getAllJobsByCompany(company);

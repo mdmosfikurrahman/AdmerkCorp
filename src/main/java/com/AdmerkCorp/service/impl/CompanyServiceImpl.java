@@ -136,7 +136,7 @@ public class CompanyServiceImpl implements CompanyService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentLength(data.length);
-            headers.setContentDispositionFormData("attachment", "CV_" + user.getRefugeeNumber() + ".pdf");
+            headers.setContentDispositionFormData("attachment", "CV_" + user.getFirstName() + " " + user.getLastName() + ".pdf");
 
             return ResponseEntity.ok()
                     .headers(headers)

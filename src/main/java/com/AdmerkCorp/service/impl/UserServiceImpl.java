@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
-        String fileName = "CV_" + user.getRefugeeNumber() + ".pdf";
+        String fileName = "CV_" + user.getFirstName() + " " + user.getLastName() + ".pdf";
         Path filePath = uploadPath.resolve(fileName);
 
         if (user.getCvFileName() != null && Files.exists(filePath)) {
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentLength(data.length);
-            headers.setContentDispositionFormData("attachment", "CV_" + user.getRefugeeNumber() + ".pdf");
+            headers.setContentDispositionFormData("attachment", "CV_" + user.getFirstName() + " " + user.getLastName() + ".pdf");
 
             return ResponseEntity.ok()
                     .headers(headers)

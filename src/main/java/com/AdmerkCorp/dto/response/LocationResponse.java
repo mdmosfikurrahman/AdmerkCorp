@@ -2,8 +2,10 @@ package com.AdmerkCorp.dto.response;
 
 import com.AdmerkCorp.model.Location;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class LocationResponse {
 
     private String country;

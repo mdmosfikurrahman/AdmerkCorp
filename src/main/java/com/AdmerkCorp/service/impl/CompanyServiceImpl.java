@@ -41,7 +41,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${cv.upload.directory}")
+    @Value("${upload.directory.cv}")
     private String cvUploadDirectory;
 
     @Override

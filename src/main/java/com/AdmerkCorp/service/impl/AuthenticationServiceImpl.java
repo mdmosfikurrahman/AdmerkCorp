@@ -78,30 +78,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .cvUploaded(false)
                 .build();
 
-        return getAuthenticationResponseForAdminAndUser(request, user);
+        return getAuthenticationResponseForUser(request, user);
     }
 
     private String generateRefugeeNumber(UserRegisterRequest request) {
         String uuid = UUID.randomUUID().toString();
         String initials = String.valueOf(request.getFirstName().charAt(0)).toUpperCase() + String.valueOf(request.getLastName().charAt(0)).toUpperCase();
         return initials + "-" + uuid.substring(0, 6).toUpperCase();
-    }
-
-
-    @Override
-    public AuthenticationResponse registerAdmin(UserRegisterRequest request) {
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new ResourceAlreadyExistsException("User with this username already exists");
-        }
-
-        var user = User.builder()
-                .email(request.getEmail())
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
-                .build();
-
-        return getAuthenticationResponseForAdminAndUser(request, user);
     }
 
     @Override
@@ -228,7 +211,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         companyTokenRepository.save(token);
     }
 
-    private AuthenticationResponse getAuthenticationResponseForAdminAndUser(UserRegisterRequest request, User user) {
+    private AuthenticationResponse getAuthenticationResponseForUser(UserRegisterRequest request, User user) {
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);

@@ -28,8 +28,7 @@ public class SecurityConfiguration {
             "/",
             "/terms",
             "/auth/**",
-            "/job/**",
-            "/admin"
+            "/job/**"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

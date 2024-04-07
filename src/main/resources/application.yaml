@@ -19,6 +19,7 @@ application:
       refresh-token:
         expiration: 604800000 # 7 days
 
-cv:
-  upload:
-    directory: G:/AdmerkCorp.com/CVs
+upload:
+  directory:
+    cv: G:/AdmerkCorp.com/CVs
+    profilePicture: G:/AdmerkCorp.com/ProfilePictures

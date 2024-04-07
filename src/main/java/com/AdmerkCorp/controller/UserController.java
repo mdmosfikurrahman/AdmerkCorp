@@ -4,6 +4,7 @@ import com.AdmerkCorp.dto.request.ChangePasswordRequest;
 import com.AdmerkCorp.dto.request.UpdateUserProfileRequest;
 import com.AdmerkCorp.dto.response.JobApplicationResponse;
 import com.AdmerkCorp.dto.response.JobResponse;
+import com.AdmerkCorp.dto.response.LocationResponse;
 import com.AdmerkCorp.dto.response.UserResponse;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.model.job.Job;
@@ -11,6 +12,7 @@ import com.AdmerkCorp.model.job.JobApplication;
 import com.AdmerkCorp.model.user.User;
 import com.AdmerkCorp.service.JobApplicationService;
 import com.AdmerkCorp.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -19,8 +21,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final ObjectMapper objectMapper;
     private final UserService userService;
     private final JobApplicationService jobApplicationService;
 
@@ -43,8 +46,24 @@ public class UserController {
 
     @PutMapping("/account/{userId}")
     @PreAuthorize("hasAuthority('user:update_profile')")
-    public ResponseEntity<String> updateUserProfile(@PathVariable Long userId, @RequestBody UpdateUserProfileRequest request) {
+    public ResponseEntity<String> updateUserProfile(
+            @PathVariable Long userId,
+            @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
+            @RequestParam(value = "curriculumVitae", required = false) MultipartFile curriculumVitae,
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "isRefugee", required = false) Boolean isRefugee,
+            @RequestParam(value = "birthDate", required = false) String birthDate,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "contactNumber", required = false) String contactNumber) {
+
         try {
+            LocalDate parsedBirthDate = birthDate != null ? LocalDate.parse(birthDate) : null;
+            LocationResponse locationResponse = location != null ? objectMapper.readValue(location, LocationResponse.class) : null;
+
+            UpdateUserProfileRequest request = new UpdateUserProfileRequest(
+                    firstName, lastName, isRefugee, parsedBirthDate, email, locationResponse, contactNumber, profilePicture, curriculumVitae);
             userService.updateUserProfile(userId, request);
             return ResponseEntity.ok("User profile updated successfully!");
         } catch (Exception e) {
@@ -93,17 +112,6 @@ public class UserController {
             return ResponseEntity.ok("Job applied successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to apply for the job");
-        }
-    }
-
-    @PostMapping("/upload-cv/{userId}")
-    @PreAuthorize("hasAuthority('user:cv_upload')")
-    public ResponseEntity<String> uploadCV(@PathVariable Long userId, @RequestParam("file") MultipartFile file, @RequestParam("fileName") String fileName) {
-        try {
-            userService.saveCV(userId, file, fileName);
-            return ResponseEntity.ok("CV uploaded successfully!");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload CV");
         }
     }
 

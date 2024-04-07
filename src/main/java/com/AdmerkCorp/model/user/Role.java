@@ -26,26 +26,6 @@ public enum Role {
             )
     ),
 
-    ADMIN(
-            Set.of(
-                    ADMIN_READ,
-                    ADMIN_UPDATE,
-                    ADMIN_DELETE,
-                    ADMIN_CREATE,
-
-                    USER_READ_JOBS,
-                    USER_JOB_APPLY,
-                    USER_PASSWORD_CHANGE,
-                    USER_DELETE,
-
-                    COMPANY_READ,
-                    COMPANY_PASSWORD_CHANGE,
-                    COMPANY_JOB_CREATE,
-                    COMPANY_DELETE,
-                    COMPANY_JOB_DELETE
-            )
-    ),
-
     COMPANY(
             Set.of(
                     COMPANY_READ,

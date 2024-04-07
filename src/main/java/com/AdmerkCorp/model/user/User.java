@@ -44,6 +44,8 @@ public class User implements UserDetails {
 
     private Boolean cvUploaded;
 
+    private String profilePicture;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
     private Location location;

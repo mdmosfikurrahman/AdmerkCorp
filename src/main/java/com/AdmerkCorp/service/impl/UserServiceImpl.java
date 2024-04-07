@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +40,11 @@ public class UserServiceImpl implements UserService {
     private final JobService jobService;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${cv.upload.directory}")
+    @Value("${upload.directory.cv}")
     private String cvUploadDirectory;
+
+    @Value("${upload.directory.profilePicture}")
+    private String profilePictureUploadDirectory;
 
     @Override
     public void validateUser(String usernameOrEmail) {
@@ -74,48 +78,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public void deleteUserById(Long id) {
-        if (userRepository.findById(id).isEmpty()) {
-            throw new ResourceNotFoundException("User not found with ID: " + id);
-        } else {
-            userRepository.deleteById(id);
-        }
-
-        userRepository.findAll();
-    }
-
-    @Override
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
     }
 
     @Override
-    public void updateUserProfile(Long userId, UpdateUserProfileRequest request) {
+    public void updateUserProfile(Long userId, UpdateUserProfileRequest request) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-
-        if (user.isRefugee() && !request.getIsRefugee()) {
-            user.setRefugee(false);
-            user.setRefugeeNumber(null);
-        } else {
-            user.setRefugee(request.getIsRefugee());
-            if (request.getIsRefugee() && user.getRefugeeNumber() == null) {
-                user.setRefugeeNumber(generateRefugeeNumber(request));
-            }
-        }
-
+        user.setRefugee(request.getIsRefugee());
         user.setEmail(request.getEmail());
         user.setBirthDate(request.getBirthDate());
         user.setContactNumber(request.getContactNumber());
+
+        if (request.getProfilePicture() != null && !request.getProfilePicture().isEmpty()) {
+            String profilePictureFileName = saveProfilePicture(request.getProfilePicture(), user);
+            user.setProfilePicture(profilePictureFileName);
+        }
+
+        if (request.getCurriculumVitae() != null && !request.getCurriculumVitae().isEmpty()) {
+            String curriculumVitaeFileName = saveCurriculumVitae(request.getCurriculumVitae(), user);
+            user.setCvUploaded(true);
+            user.setCvFileName(curriculumVitaeFileName);
+        }
 
         Location location = user.getLocation();
         location.setCountry(request.getLocation().getCountry());
@@ -127,25 +116,32 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public void saveCV(Long userId, MultipartFile file, String originalFileName) throws IOException {
+    private String saveProfilePicture(MultipartFile profilePicture, User user) throws IOException {
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(profilePicture.getOriginalFilename()));
+        String fileExtension = StringUtils.getFilenameExtension(originalFileName);
+        String newFileName = user.getRefugeeNumber() + "." + fileExtension;
+
+        Path uploadPath = Paths.get(profilePictureUploadDirectory).toAbsolutePath().normalize();
+        Files.createDirectories(uploadPath);
+
+        Path filePath = uploadPath.resolve(newFileName);
+        Files.copy(profilePicture.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return newFileName;
+    }
+
+    private String saveCurriculumVitae(MultipartFile curriculumVitae, User user) throws IOException {
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(curriculumVitae.getOriginalFilename()));
+        String fileExtension = StringUtils.getFilenameExtension(originalFileName);
+        String newFileName = "CV_" + user.getFirstName() + " " + user.getLastName() + "." + fileExtension;
+
         Path uploadPath = Paths.get(cvUploadDirectory).toAbsolutePath().normalize();
+        Files.createDirectories(uploadPath);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+        Path filePath = uploadPath.resolve(newFileName);
+        Files.copy(curriculumVitae.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        String fileName = "CV_" + user.getFirstName() + " " + user.getLastName() + ".pdf";
-        Path filePath = uploadPath.resolve(fileName);
-
-        if (user.getCvFileName() != null && Files.exists(filePath)) {
-            Files.delete(filePath);
-        }
-
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        user.setCvFileName(fileName);
-        user.setCvUploaded(true);
-        userRepository.save(user);
+        return newFileName;
     }
 
     @Override
@@ -173,12 +169,6 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to read CV file", e);
         }
-    }
-
-    private String generateRefugeeNumber(UpdateUserProfileRequest request) {
-        String uuid = UUID.randomUUID().toString();
-        String initials = String.valueOf(request.getFirstName().charAt(0)).toUpperCase() + String.valueOf(request.getLastName().charAt(0)).toUpperCase();
-        return initials + "_" + uuid.substring(0, 6).toUpperCase();
     }
 
 }

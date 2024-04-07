@@ -12,7 +12,6 @@ import java.io.IOException;
 public interface AuthenticationService {
 
     AuthenticationResponse registerUser(UserRegisterRequest request);
-    AuthenticationResponse registerAdmin(UserRegisterRequest request);
     AuthenticationResponse registerCompany(CompanyRegisterRequest request);
     AuthenticationResponse authenticate(AuthenticationRequest request);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;

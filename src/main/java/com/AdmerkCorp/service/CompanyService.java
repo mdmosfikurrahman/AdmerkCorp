@@ -8,6 +8,7 @@ import com.AdmerkCorp.model.job.Job;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface CompanyService {
     List<Company> getAllCompanies();
     void deleteCompanyById(Long companyId);
     void updateCompanyProfile(Long companyId, UpdateCompanyProfileRequest companyResponse);
-    ResponseEntity<ByteArrayResource> downloadApplicantCV(Long userId);
+    ByteArrayResource downloadApplicantCV(Long userId) throws IOException;
 }

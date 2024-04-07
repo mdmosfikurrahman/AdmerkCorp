@@ -15,12 +15,15 @@ import com.AdmerkCorp.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
@@ -117,8 +120,17 @@ public class UserController {
 
     @GetMapping("/download-cv/{userId}")
     @PreAuthorize("hasAuthority('user:cv_download')")
-    public ResponseEntity<ByteArrayResource> downloadCV(@PathVariable Long userId) {
-        return userService.downloadCV(userId);
+    public ResponseEntity<Resource> downloadCV(@PathVariable Long userId) {
+        try {
+            ByteArrayResource response = userService.downloadCV(userId);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
 
 }

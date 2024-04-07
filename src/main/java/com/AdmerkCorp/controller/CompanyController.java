@@ -14,11 +14,14 @@ import com.AdmerkCorp.service.CompanyService;
 import com.AdmerkCorp.service.JobApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,8 +128,16 @@ public class CompanyController {
 
     @GetMapping("/download-cv/{userId}")
     @PreAuthorize("hasAuthority('company:cv_download')")
-    public ResponseEntity<ByteArrayResource> downloadCV(@PathVariable Long userId) {
-        return companyService.downloadApplicantCV(userId);
+    public ResponseEntity<Resource> downloadCV(@PathVariable Long userId) {
+        try {
+            ByteArrayResource response = companyService.downloadApplicantCV(userId);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 }

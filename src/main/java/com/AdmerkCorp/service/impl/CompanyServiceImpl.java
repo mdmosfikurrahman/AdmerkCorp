@@ -17,9 +17,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -120,30 +117,14 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public ResponseEntity<ByteArrayResource> downloadApplicantCV(Long userId) {
+    public ByteArrayResource downloadApplicantCV(Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
-        if (user.getCvFileName() == null) {
-            throw new ResourceNotFoundException("CV not found for user with ID: " + userId);
-        }
+        Path cvPath = Paths.get(cvUploadDirectory).toAbsolutePath().normalize().resolve(user.getCvFileName());
+        byte[] cvBytes = Files.readAllBytes(cvPath);
 
-        try {
-            Path filePath = Paths.get(cvUploadDirectory).resolve(user.getCvFileName());
-            byte[] data = Files.readAllBytes(filePath);
-            ByteArrayResource resource = new ByteArrayResource(data);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentLength(data.length);
-            headers.setContentDispositionFormData("attachment", "CV_" + user.getFirstName() + " " + user.getLastName() + ".pdf");
-
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(resource);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read CV file", e);
-        }
+        return new ByteArrayResource(cvBytes);
     }
 
 }

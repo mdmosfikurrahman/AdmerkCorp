@@ -143,12 +143,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .name(company.getCompanyName())
                     .role(String.valueOf(Role.COMPANY).toLowerCase())
                     .isRefugee(false)
+                    .refugeeNumberOrAddress(company.getLocation().getCountry())
                     .build();
 
             return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
-                .tokenType("Bearer")
+                    .tokenType("Bearer")
                     .loginData(loginData)
                     .build();
         }
@@ -178,6 +179,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .name(user.getFirstName() + ' ' + user.getLastName())
                 .role(String.valueOf(Role.USER).toLowerCase())
                 .isRefugee(user.isRefugee())
+                .refugeeNumberOrAddress(user.getRefugeeNumber())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -223,6 +225,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .name(user.getFirstName() + ' ' + user.getLastName())
                 .role(String.valueOf(Role.USER).toLowerCase())
                 .isRefugee(user.isRefugee())
+                .refugeeNumberOrAddress(user.getRefugeeNumber())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -245,6 +248,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .name(request.getName())
                 .role(String.valueOf(Role.COMPANY).toLowerCase())
                 .isRefugee(false)
+                .refugeeNumberOrAddress(company.getLocation().getCountry())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -316,11 +320,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .name(user.getFirstName() + ' ' + user.getLastName())
                     .role(String.valueOf(Role.USER).toLowerCase())
                     .isRefugee(user.isRefugee())
+                    .refugeeNumberOrAddress(user.getRefugeeNumber())
                     .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
-                .tokenType("Bearer")
+                    .tokenType("Bearer")
                     .loginData(loginData)
                     .build();
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
@@ -338,6 +343,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .name(company.getCompanyName())
                     .role(String.valueOf(Role.COMPANY).toLowerCase())
                     .isRefugee(false)
+                    .refugeeNumberOrAddress(company.getLocation().getCountry())
                     .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)

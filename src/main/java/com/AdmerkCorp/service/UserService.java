@@ -18,5 +18,5 @@ public interface UserService {
     User getUserByUsername(String username);
     void updateUserProfile(Long userId, UpdateUserProfileRequest request) throws IOException;
     ByteArrayResource downloadCV(Long userId) throws IOException;
-
+    ByteArrayResource downloadProfilePicture(Long userId) throws IOException;
 }

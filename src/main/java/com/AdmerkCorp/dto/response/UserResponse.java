@@ -32,6 +32,8 @@ public class UserResponse {
 
     private Boolean cvUploaded;
 
+    private String profilePictureUrl;
+
     public UserResponse(User user) {
         this.userId = user.getId();
         this.firstName = user.getFirstName();
@@ -45,6 +47,7 @@ public class UserResponse {
         this.contactNumber = user.getContactNumber();
         this.cvFileName = user.getCvFileName();
         this.cvUploaded = user.getCvUploaded();
+        this.profilePictureUrl = "user/account/profile-picture/" + user.getId();
     }
 
 }

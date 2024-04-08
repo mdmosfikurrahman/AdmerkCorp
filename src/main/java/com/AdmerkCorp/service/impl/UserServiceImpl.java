@@ -152,4 +152,17 @@ public class UserServiceImpl implements UserService {
         return new ByteArrayResource(cvBytes);
     }
 
+    @Override
+    public ByteArrayResource downloadProfilePicture(Long userId) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
+
+        Path profilePicturePath = Paths.get(profilePictureUploadDirectory).toAbsolutePath().normalize().resolve(user.getProfilePicture());
+
+        byte[] profilePictureBytes = Files.readAllBytes(profilePicturePath);
+
+        return new ByteArrayResource(profilePictureBytes);
+    }
+
+
 }

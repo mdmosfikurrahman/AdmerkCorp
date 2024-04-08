@@ -132,5 +132,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/account/profile-picture/{userId}")
+    @PreAuthorize("hasAuthority('user:read')")
+    public ResponseEntity<Resource> downloadProfilePicture(@PathVariable Long userId) {
+        try {
+            ByteArrayResource response = userService.downloadProfilePicture(userId);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
 }

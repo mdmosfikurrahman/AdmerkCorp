@@ -13,6 +13,7 @@ public class CompanyResponse {
     private String website;
     private SocialResponse social;
     private LocationResponse location;
+    private String profilePictureUrl;
 
     public CompanyResponse(Company company) {
         this.companyId = company.getId();
@@ -22,6 +23,7 @@ public class CompanyResponse {
         this.website = company.getWebsite();
         this.social = new SocialResponse(company.getSocial());
         this.location = new LocationResponse(company.getLocation());
+        this.profilePictureUrl = "company/account/profile-picture/" + company.getId();
     }
 
 }

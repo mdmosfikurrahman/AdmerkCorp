@@ -31,6 +31,8 @@ public class Company implements UserDetails {
 
     private Role role;
 
+    private String profilePicture;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "social_id")
     private Social social;

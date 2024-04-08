@@ -14,7 +14,7 @@ public interface JobApplicationService {
     List<JobApplication> getAllApplications();
     void deleteApplicationById(Long applicationId);
     List<JobApplication> getApplicationsByCompany(Company company);
-    List<JobApplication> getApplicationsByCompanyAndUserId(Company company, Long userId);
+    JobApplication getApplicationsByCompanyAndUserId(Company company, Long userId);
     void respondToApplication(Company company, Long userId, JobApplicationStatus response);
 
 }

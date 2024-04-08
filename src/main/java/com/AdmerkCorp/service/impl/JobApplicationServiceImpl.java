@@ -58,18 +58,18 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     @Override
-    public List<JobApplication> getApplicationsByCompanyAndUserId(Company company, Long userId) {
+    public JobApplication getApplicationsByCompanyAndUserId(Company company, Long userId) {
         List<JobApplication> jobApplicationList = jobApplicationRepository.findByJobCompany(company);
-        List<JobApplication> userApplications = new ArrayList<>();
 
         for (JobApplication jobApplication : jobApplicationList) {
             if (jobApplication.getUser().getId().equals(userId)) {
-                userApplications.add(jobApplication);
+                return jobApplication;
             }
         }
 
-        return userApplications;
+        return null;
     }
+
 
     @Override
     public void respondToApplication(Company company, Long userId, JobApplicationStatus response) {

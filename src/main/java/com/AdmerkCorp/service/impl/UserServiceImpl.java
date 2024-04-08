@@ -38,10 +38,10 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Value("${upload.directory.cv}")
-    private String cvUploadDirectory;
+    private String cvDirectory;
 
     @Value("${upload.directory.profilePicture}")
-    private String profilePictureUploadDirectory;
+    private String profilePictureDirectory;
 
     @Override
     public void validateUser(String usernameOrEmail) {
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
         String fileExtension = StringUtils.getFilenameExtension(originalFileName);
         String newFileName = user.getRefugeeNumber() + "." + fileExtension;
 
-        Path uploadPath = Paths.get(profilePictureUploadDirectory).toAbsolutePath().normalize();
+        Path uploadPath = Paths.get(profilePictureDirectory).toAbsolutePath().normalize();
         Files.createDirectories(uploadPath);
 
         Path filePath = uploadPath.resolve(newFileName);
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
         String fileExtension = StringUtils.getFilenameExtension(originalFileName);
         String newFileName = "CV_" + user.getFirstName() + " " + user.getLastName() + "." + fileExtension;
 
-        Path uploadPath = Paths.get(cvUploadDirectory).toAbsolutePath().normalize();
+        Path uploadPath = Paths.get(cvDirectory).toAbsolutePath().normalize();
         Files.createDirectories(uploadPath);
 
         Path filePath = uploadPath.resolve(newFileName);
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
-        Path cvPath = Paths.get(cvUploadDirectory).toAbsolutePath().normalize().resolve(user.getCvFileName());
+        Path cvPath = Paths.get(cvDirectory).toAbsolutePath().normalize().resolve(user.getCvFileName());
         byte[] cvBytes = Files.readAllBytes(cvPath);
 
         return new ByteArrayResource(cvBytes);
@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
-        Path profilePicturePath = Paths.get(profilePictureUploadDirectory).toAbsolutePath().normalize().resolve(user.getProfilePicture());
+        Path profilePicturePath = Paths.get(profilePictureDirectory).toAbsolutePath().normalize().resolve(user.getProfilePicture());
 
         byte[] profilePictureBytes = Files.readAllBytes(profilePicturePath);
 

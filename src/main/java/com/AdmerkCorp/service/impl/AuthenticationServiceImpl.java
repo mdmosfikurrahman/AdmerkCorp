@@ -144,6 +144,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .role(String.valueOf(Role.COMPANY).toLowerCase())
                     .isRefugee(false)
                     .refugeeNumberOrAddress(company.getLocation().getCountry())
+                    .profilePictureUrl("company/account/profile-picture/" + company.getId())
                     .build();
 
             return AuthenticationResponse.builder()
@@ -180,6 +181,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(String.valueOf(Role.USER).toLowerCase())
                 .isRefugee(user.isRefugee())
                 .refugeeNumberOrAddress(user.getRefugeeNumber())
+                .profilePictureUrl("user/account/profile-picture/" + user.getId())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -226,6 +228,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(String.valueOf(Role.USER).toLowerCase())
                 .isRefugee(user.isRefugee())
                 .refugeeNumberOrAddress(user.getRefugeeNumber())
+                .profilePictureUrl("user/account/profile-picture/" + user.getId())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -249,6 +252,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(String.valueOf(Role.COMPANY).toLowerCase())
                 .isRefugee(false)
                 .refugeeNumberOrAddress(company.getLocation().getCountry())
+                .profilePictureUrl("company/account/profile-picture/" + company.getId())
                 .build();
 
         return AuthenticationResponse.builder()
@@ -321,6 +325,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .role(String.valueOf(Role.USER).toLowerCase())
                     .isRefugee(user.isRefugee())
                     .refugeeNumberOrAddress(user.getRefugeeNumber())
+                    .profilePictureUrl("user/account/profile-picture/" + user.getId())
                     .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)
@@ -344,11 +349,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .role(String.valueOf(Role.COMPANY).toLowerCase())
                     .isRefugee(false)
                     .refugeeNumberOrAddress(company.getLocation().getCountry())
+                    .profilePictureUrl("company/account/profile-picture/" + company.getId())
                     .build();
             var authResponse = AuthenticationResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
-                .tokenType("Bearer")
+                    .tokenType("Bearer")
                     .loginData(loginData)
                     .build();
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);

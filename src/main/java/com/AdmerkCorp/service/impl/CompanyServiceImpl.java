@@ -2,6 +2,8 @@ package com.AdmerkCorp.service.impl;
 
 import com.AdmerkCorp.dto.request.ChangePasswordRequest;
 import com.AdmerkCorp.dto.request.UpdateCompanyProfileRequest;
+import com.AdmerkCorp.dto.response.LocationResponse;
+import com.AdmerkCorp.dto.response.SocialResponse;
 import com.AdmerkCorp.exception.AccessForbiddenException;
 import com.AdmerkCorp.exception.ResourceNotFoundException;
 import com.AdmerkCorp.model.Company;
@@ -20,14 +22,18 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +45,10 @@ public class CompanyServiceImpl implements CompanyService {
     private final PasswordEncoder passwordEncoder;
 
     @Value("${upload.directory.cv}")
-    private String cvUploadDirectory;
+    private String cvDirectory;
+
+    @Value("${upload.directory.profilePicture}")
+    private String profilePictureDirectory;
 
     @Override
     public Job createJob(Job job, Company company) {
@@ -77,27 +86,22 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<Company> getAllCompanies() {
-        return companyRepository.findAll();
-    }
-
-    @Override
-    public void deleteCompanyById(Long companyId) {
-        companyRepository.deleteById(companyId);
-    }
-
-    @Override
-    public void updateCompanyProfile(Long companyId, UpdateCompanyProfileRequest companyResponse) {
+    public void updateCompanyProfile(Long companyId, UpdateCompanyProfileRequest request) throws IOException {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found with ID: " + companyId));
 
-        company.setCompanyName(companyResponse.getCompanyName());
-        company.setCompanyMail(companyResponse.getCompanyMail());
-        company.setWebsite(companyResponse.getWebsite());
+        company.setCompanyName(request.getCompanyName());
+        company.setCompanyMail(request.getCompanyMail());
+        company.setWebsite(request.getWebsite());
+
+        if (request.getProfilePicture() != null && !request.getProfilePicture().isEmpty()) {
+            String profilePictureFileName = saveProfilePicture(request.getProfilePicture(), company);
+            company.setProfilePicture(profilePictureFileName);
+        }
 
         // Update Social
         Social social = company.getSocial();
-        Social updateSocial = companyResponse.getSocial();
+        Social updateSocial = request.getSocial();
         social.setFacebook(updateSocial.getFacebook());
         social.setLinkedIn(updateSocial.getLinkedIn());
         social.setTwitter(updateSocial.getTwitter());
@@ -106,7 +110,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         // Update Location
         Location location = company.getLocation();
-        Location updateLocation = companyResponse.getLocation();
+        LocationResponse updateLocation = request.getLocation();
         location.setCountry(updateLocation.getCountry());
         location.setState(updateLocation.getState());
         location.setCity(updateLocation.getCity());
@@ -116,15 +120,41 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(company);
     }
 
+    private String saveProfilePicture(MultipartFile profilePicture, Company company) throws IOException {
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(profilePicture.getOriginalFilename()));
+        String fileExtension = StringUtils.getFilenameExtension(originalFileName);
+        String newFileName = company.getName() + "." + fileExtension;
+
+        Path uploadPath = Paths.get(profilePictureDirectory).toAbsolutePath().normalize();
+        Files.createDirectories(uploadPath);
+
+        Path filePath = uploadPath.resolve(newFileName);
+        Files.copy(profilePicture.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return newFileName;
+    }
+
     @Override
     public ByteArrayResource downloadApplicantCV(Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userId));
 
-        Path cvPath = Paths.get(cvUploadDirectory).toAbsolutePath().normalize().resolve(user.getCvFileName());
+        Path cvPath = Paths.get(cvDirectory).toAbsolutePath().normalize().resolve(user.getCvFileName());
         byte[] cvBytes = Files.readAllBytes(cvPath);
 
         return new ByteArrayResource(cvBytes);
+    }
+
+    @Override
+    public ByteArrayResource downloadProfilePicture(Long companyId) throws IOException {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Company not found with ID: " + companyId));
+
+        Path profilePicturePath = Paths.get(profilePictureDirectory).toAbsolutePath().normalize().resolve(company.getProfilePicture());
+
+        byte[] profilePictureBytes = Files.readAllBytes(profilePicturePath);
+
+        return new ByteArrayResource(profilePictureBytes);
     }
 
 }

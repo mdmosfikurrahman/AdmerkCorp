@@ -133,7 +133,7 @@ public class UserController {
     }
 
     @GetMapping("/account/profile-picture/{userId}")
-    @PreAuthorize("hasAuthority('user:read')")
+    @PreAuthorize("hasAnyAuthority('company:read','user:read')")
     public ResponseEntity<Resource> downloadProfilePicture(@PathVariable Long userId) {
         try {
             ByteArrayResource response = userService.downloadProfilePicture(userId);

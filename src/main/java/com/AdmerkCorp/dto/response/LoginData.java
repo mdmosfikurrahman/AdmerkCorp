@@ -13,5 +13,6 @@ public class LoginData {
     private String role;
     private Boolean isRefugee;
     private String refugeeNumberOrAddress;
+    private String profilePictureUrl;
 
 }
